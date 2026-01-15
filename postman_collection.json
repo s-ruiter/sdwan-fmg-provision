@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "066df2cb-5fcf-4ba4-a2d4-957ad3a59148",
+    "_postman_id": "964cfd1a-a0cc-41bf-a786-43ce610b0dbe",
     "name": "SDWAN76",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "2935005"
+    "_exporter_id": "51479595",
+    "_collection_link": "https://s-ruiter-ed7e18fd-9979297.postman.co/workspace/Sander's-Workspace~7eb2eb98-e66d-4cfa-853a-05619da01c4c/collection/51479595-964cfd1a-a0cc-41bf-a786-43ce610b0dbe?action=share&source=collection_link&creator=51479595"
   },
   "item": [
     {
@@ -131,8 +132,7 @@
           "path": [
             "jsonrpc"
           ]
-        },
-        "description": ""
+        }
       },
       "response": []
     },
@@ -1114,7 +1114,8 @@
               ""
             ],
             "type": "text/javascript",
-            "packages": {}
+            "packages": {},
+            "requests": {}
           }
         }
       ],
@@ -1128,7 +1129,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"HUB1_GENERAL\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n        \"script\": \"config system global\\n  set hostname HUB1\\nend\\nconfig system settings\\n  set location-id $(bgp_loopback)\\n  set tcp-session-without-syn enable\\n  set ike-tcp-port 10443\\nend\\nconfig system interface\\n  edit \\\"$(wan1)\\\"\\n    set mode static\\n    set ip $(wan1_hub1) 255.255.255.0\\n    set vrf 0\\n    unset egress-shaping-profile\\n    unset ingress-shaping-profile\\n    unset outbandwidth\\n    unset inbandwidth\\n    unset estimated-upstream-bandwidth \\n    unset estimated-downstream-bandwidth \\n    set role wan\\n    set allowaccess ping https fgfm \\n  next\\nend\\nconfig system interface\\n  edit \\\"port3\\\"\\n    set mode static\\n    set ip 192.168.251.1/24\\n    set vrf 0\\n    set dhcp-relay-service disable\\n    set role lan\\n    set device-identification enable\\n    set allowaccess ping https \\n  next\\nend\\nconfig system interface\\n  edit \\\"Lo-BGP\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan    \\n    set ip $(bgp_loopback)/32\\n    set allowaccess ping\\n  next\\nend\\nconfig system interface\\n  edit \\\"Lo-HC\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan     \\n    set ip $(loopback_bgp_hub_hc)/32\\n    set allowaccess ping\\n  next\\nend\\nconfig system dhcp server\\n  edit 10\\n    set dns-service default\\n    set default-gateway 192.168.251.1\\n    set netmask 255.255.255.0\\n    set interface port3\\n    config ip-range\\n      edit 1\\n        set start-ip 192.168.251.10\\n        set end-ip 192.168.251.100\\n      next\\n    end\\n  next\\nend\\n\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_loopback\",\n          \"loopback_bgp_hub_hc\",\n          \"wan1\",\n          \"wan1_hub1\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"HUB1_GENERAL\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n          \"script\": \"config system global\\n  set hostname HUB1\\nend\\nconfig system settings\\n  set location-id $(bgp_loopback)\\n  set tcp-session-without-syn enable\\n  set ike-tcp-port 10443\\nend\\nconfig system interface\\n  edit \\\"$(wan1)\\\"\\n    set mode static\\n    set ip $(wan1_hub1) 255.255.255.0\\n    set vrf 0\\n    unset egress-shaping-profile\\n    unset ingress-shaping-profile\\n    unset outbandwidth\\n    unset inbandwidth\\n    unset estimated-upstream-bandwidth \\n    unset estimated-downstream-bandwidth \\n    set role wan\\n    set allowaccess ping https fgfm \\n  next\\n  edit \\\"port3\\\"\\n    set mode static\\n    set ip 192.168.251.1 255.255.255.0\\n    set vrf 0\\n    set dhcp-relay-service disable\\n    set role lan\\n    set device-identification enable\\n    set allowaccess ping https \\n  next\\n  edit \\\"port4\\\"\\n    set mode static\\n    set ip 10.254.254.201 255.255.255.0\\n    set vrf 0\\n    set dhcp-relay-service disable\\n    set role lan\\n    set device-identification enable\\n    set allowaccess ping https ssh \\n  next\\n  edit \\\"Lo-BGP\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan    \\n    set ip $(bgp_loopback) 255.255.255.255\\n    set allowaccess ping\\n  next\\n  edit \\\"Lo-HC\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan     \\n    set ip $(loopback_bgp_hub_hc) 255.255.255.255\\n    set allowaccess ping\\n  next\\nend\\nconfig system dhcp server\\n  edit 10\\n    set interface \\\"port3\\\"\\n    set default-gateway 192.168.251.1\\n    set netmask 255.255.255.0\\n    set dns-service default\\n    config ip-range\\n      edit 1\\n        set start-ip 192.168.251.10\\n        set end-ip 192.168.251.100\\n      next\\n    end\\n  next\\nend\\n\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_loopback\",\n          \"loopback_bgp_hub_hc\",\n          \"wan1\",\n          \"wan1_hub1\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
           "options": {
             "raw": {
               "language": "json"
