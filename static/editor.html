@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Collection - FMG Provisioner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .editor-container {
+            width: 95%;
+            /* Wider than the login card */
+            max-width: 1200px;
+        }
+
+        #json-editor {
+            width: 100%;
+            height: 60vh;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            margin-bottom: 1.5rem;
+            outline: none;
+            overflow: auto;
+            white-space: pre;
+        }
+
+        #json-editor:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+        <div class="globe globe-3"></div>
+    </div>
+
+    <div class="app-container editor-container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-code"></i>
+                <span>Collection Editor</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="glass-panel">
+                <div class="editor-header">
+                    <h2>postman_collection.json</h2>
+                    <div class="editor-actions">
+                        <a href="index.html" class="btn-secondary btn-small"
+                            style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center;">
+                            Back
+                        </a>
+                        <button class="btn-primary btn-small" id="save-btn">
+                            <i class="fa-solid fa-save" style="margin-right: 8px;"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <textarea id="json-editor" spellcheck="false">Loading...</textarea>
+
+                <div class="status-message" id="editor-status"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const editor = document.getElementById('json-editor');
+            const saveBtn = document.getElementById('save-btn');
+            const statusMsg = document.getElementById('editor-status');
+
+            // Load Content
+            try {
+                const response = await fetch('/api/collection');
+                if (!response.ok) throw new Error('Failed to load collection');
+                const data = await response.json();
+                editor.value = JSON.stringify(data, null, 4);
+            } catch (err) {
+                editor.value = "// Error loading file: " + err.message;
+                saveBtn.disabled = true;
+            }
+
+            // Save Content
+            saveBtn.addEventListener('click', async () => {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+                try {
+                    // Validate JSON
+                    let jsonContent;
+                    try {
+                        jsonContent = JSON.parse(editor.value);
+                    } catch (e) {
+                        throw new Error('Invalid JSON format');
+                    }
+
+                    const response = await fetch('/api/collection', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(jsonContent)
+                    });
+
+                    if (!response.ok) throw new Error('Failed to save');
+
+                    statusMsg.textContent = 'Saved successfully!';
+                    statusMsg.className = 'status-message success';
+                    setTimeout(() => {
+                        statusMsg.style.opacity = '1';
+                        setTimeout(() => statusMsg.style.opacity = '0', 2000);
+                    }, 10);
+
+                } catch (err) {
+                    statusMsg.textContent = err.message;
+                    statusMsg.className = 'status-message error';
+                    statusMsg.style.opacity = '1';
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fa-solid fa-save" style="margin-right: 8px;"></i> Save Changes';
+                }
+            });
+
+            // Allow tab in textarea
+            editor.addEventListener('keydown', function (e) {
+                if (e.key == 'Tab') {
+                    e.preventDefault();
+                    var start = this.selectionStart;
+                    var end = this.selectionEnd;
+
+                    // set textarea value to: text before caret + tab + text after caret
+                    this.value = this.value.substring(0, start) +
+                        "    " + this.value.substring(end);
+
+                    // put caret at right position again
+                    this.selectionStart = this.selectionEnd = start + 4;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

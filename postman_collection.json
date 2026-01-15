@@ -1,0 +1,1680 @@
+{
+  "info": {
+    "_postman_id": "066df2cb-5fcf-4ba4-a2d4-957ad3a59148",
+    "name": "SDWAN76",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2935005"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var data = JSON.parse(responseBody);",
+              "",
+              "postman.setEnvironmentVariable('session',data['session']);",
+              "postman.setEnvironmentVariable('status_code',data['result'][0]['status']['code']);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"session\" : 1,\r\n\t\"id\" : 1,\r\n\t\"method\" : \"exec\",\r\n\t\"params\" : [\r\n\t\t{\r\n\t\t\t\"url\" : \"sys/login/user\",\r\n\t\t\t\"data\" : [\r\n\t\t\t\t{\r\n\t\t\t\t\t\"user\" : \"{{username}}\",\r\n\t\t\t\t\t\"passwd\" : \"{{password}}\"\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t]\r\n}"
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01_Variables",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/obj/fmg/variable\",\n            \"data\": [\n                {\n                    \"name\": \"bgp_as\"\n                },\n                {\n                    \"name\": \"bgp_loopback\"\n                },\n                {\n                    \"name\": \"bgp_as_subnet\"\n                },\n                {\n                    \"name\": \"branch_id\"\n                },\n                {\n                    \"name\": \"lan_subnet\"\n                },\n                {\n                    \"name\": \"loopback_bgp_h1\"\n                },\n                {\n                    \"name\": \"loopback_bgp_h2\"\n                },\n                {\n                    \"name\": \"loopback_bgp_hub_hc\"\n                },\n                {\n                    \"name\": \"wan1\"\n                },\n                {\n                    \"name\": \"wan2\"\n                },                                \n                {\n                    \"name\": \"wan1_hub1\"\n                },\n                {\n                    \"name\": \"wan1_hub2\"\n                }                \n            ]\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02_DeviceGroups",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"set\",\n  \"params\": [\n    {\n      \"url\": \"/dvmdb/adom/{{adom}}/group\",\n      \"data\": [\n        {\n          \"name\": \"spokes\",\n          \"os_type\": 1\n        },\n        {\n          \"name\": \"hub1\",\n          \"os_type\": 1\n        },\n        {\n          \"name\": \"hub2\",\n          \"os_type\": 1\n        }\n      ]\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "name": "03_SystemTemplate",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/devprof/adom/{{adom}}/\",\n            \"data\": [\n                {\n                    \"name\": \"Basic-Settings\",\n                    \"type\": \"devprof\"\n                }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04_SystemTemplateItems",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/devprof/Basic-Settings/device/profile/setting\",\n            \"data\": {\n                \"enabled-pages\": [\n                    \"dns\",\n                    \"log\",\n                    \"admin\"\n                ]\n            }\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05_SystemTemplate_AdminTimeout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/devprof/Basic-Settings/system/global\",\n            \"data\": {\n                \"admintimeout\": 480,\n                \"admin-scp\": 1\n            }\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06_SystemTemplate_DNS",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/devprof/Basic-Settings/device/template/widget/dns/action-list\",\n            \"data\": {\n                \"action\": \"conf-sys-dns\",\n                \"model\": \"all\",\n                \"seq\": 1,\n                \"value\": {\n                    \"primary\": \"$(dns_primary)\",\n                    \"secondary\": \"$(dns_secondary)\",\n                    \"protocol\": null\n                }\n            }\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07_SystemTemplate_FAZ",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/devprof/Basic-Settings/device/profile/fortianalyzer\",\n            \"data\": {\n                \"target\": 4,\n                \"target-ip\": \"$(faz_target_ip)\",\n                \"target-sn\": \"$(faz_target_sn)\"\n            }\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08_SystemTemplate_FAZ_Upload",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/devprof/Basic-Settings/log/fortianalyzer/setting\",\n            \"data\": {\n                \"upload-option\": 1\n            }\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09_CertificateTemplates",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/obj/certificate/template\",\n            \"data\": [\n                {\n                    \"name\": \"SPOKES\",\n                    \"type\": \"local\",\n                    \"key-type\": \"RSA\",\n                    \"key-size\": \"2048\",\n                    \"digest-type\": \"sha256\"    \n                },\n                {\n                    \"name\": \"HUB\",\n                    \"type\": \"local\",\n                    \"key-type\": \"RSA\",\n                    \"key-size\": \"2048\",\n                    \"digest-type\": \"sha256\"    \n                }\n            ]\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10_SDWAN_Template",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/obj/firewall/address\",\n            \"data\": [\n                {\n                    \"name\": \"CORP_LAN\",\n                    \"subnet\": [\n                        \"$(corp_lan_subnet)\",\n                        \"$(corp_lan_netmask)\"\n                    ],\n                    \"type\": 0,\n                    \"associated-interface\": \"any\",\n                    \"color\": 22\n                }\n            ]\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11_SDWAN_Templates",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/wanprof/adom/{{adom}}/\",\n            \"data\": [\n                {\n                    \"name\": \"SPOKES\",\n                    \"type\": \"wanprof\"\n                },\n                {\n                    \"name\": \"HUB\",\n                    \"type\": \"wanprof\"\n                }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12_SDWAN_Template_SPOKES",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"replace\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/wanprof/SPOKES/system/sdwan\",\n            \"data\": {\n                \"status\": 1,\n                \"load-balance-mode\": 2,\n                \"zone\": [\n                    {\n                        \"name\": \"virtual-wan-link\"\n                    },\n                    {\n                        \"name\": \"underlay\"\n                    },\n                    {\n                        \"name\": \"overlay\"\n                    }\n                ],\n                \"members\": [\n                    {\n                        \"seq-num\": 1,\n                        \"interface\": \"port1\",\n                        \"zone\": \"underlay\"\n                    },\n                    {\n                        \"seq-num\": 2,\n                        \"interface\": \"port2\",\n                        \"zone\": \"underlay\"\n                    },\n                    {\n                        \"seq-num\": 3,\n                        \"interface\": \"H1_ISP1\",\n                        \"priority\": 10,\n                        \"source\": \"$(bgp_loopback)\",\n                        \"zone\": \"overlay\"\n                    },\n                    {\n                        \"seq-num\": 4,\n                        \"interface\": \"H1_ISP2\",\n                        \"priority\": 10,\n                        \"source\": \"$(bgp_loopback)\",\n                        \"zone\": \"overlay\"\n                    },\n                    {\n                        \"seq-num\": 5,\n                        \"interface\": \"H2_ISP1\",\n                        \"priority\": 10,\n                        \"source\": \"$(bgp_loopback)\",\n                        \"zone\": \"overlay\"\n                    },\n                    {\n                        \"seq-num\": 6,\n                        \"interface\": \"H2_ISP2\",\n                        \"priority\": 10,\n                        \"source\": \"$(bgp_loopback)\",\n                        \"zone\": \"overlay\"\n                    }\n                ],\n                \"health-check\": [\n                    {\n                        \"name\": \"HUB\",\n                        \"server\": \"$loopback_bgp_hub_hc\",\n                        \"protocol\": 1,\n                        \"embed-measured-health\": 1,\n                        \"sla-id-redistribute\": 1,\n                        \"members\": [\n                            \"3\",\n                            \"4\",\n                            \"5\",\n                            \"6\"\n                        ],\n                        \"sla-fail-log-period\": 10,\n                        \"sla-pass-log-period\": 10,\n                        \"sla\": [\n                            {\n                                \"id\": 1,\n                                \"latency-threshold\": 100,\n                                \"link-cost-factor\": 1\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"Internet\",\n                        \"server\": \"8.8.8.8\",\n                        \"protocol\": 64,\n                        \"members\": [\n                            \"1\",\n                            \"2\"\n                        ],\n                        \"sla-fail-log-period\": 10,\n                        \"sla-pass-log-period\": 10,\n                        \"update-cascade-interface\": 0,\n                        \"update-static-route\": 0,\n                        \"sla\": [\n                            {\n                                \"id\": 1,\n                                \"latency-threshold\": 250,\n                                \"link-cost-factor\": 1\n                            }\n                        ]\n                    }\n                ],\n                \"service\": [\n                    {\n                        \"id\": 1,\n                        \"name\": \"Corporate\",\n                        \"src\": \"CORP_LAN\",\n                        \"dst\": \"CORP_LAN\",\n                        \"protocol\": 0,\n                        \"mode\": 4,\n                        \"priority-members\": [\n                            \"3\",\n                            \"4\",\n                            \"5\",\n                            \"6\"\n                        ],\n                        \"sla\": [\n                            {\n                                \"health-check\": \"HUB\",\n                                \"id\": 1\n                            }\n                        ],\n                        \"tie-break\": 3,\n                        \"role\": 3,\n                        \"status\": 1\n                    },\n                    {\n                        \"id\": 2,\n                        \"name\": \"SaaS-DIA\",\n                        \"internet-service\": 1,\n                        \"internet-service-app-ctrl\": [\n                            16354,\n                            16920\n                        ],\n                        \"mode\": 4,\n                        \"load-balance\": 1,\n                        \"priority-members\": [\n                            \"1\",\n                            \"2\"\n                        ],\n                        \"sla\": [\n                            {\n                                \"health-check\": \"Internet\",\n                                \"id\": 1\n                            }\n                        ],\n                        \"role\": 3,\n                        \"status\": 1\n                    }\n                ]\n            }\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13_SDWAN_Templates_ADVPN2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"update\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/wanprof/SPOKES/system/sdwan/zone/overlay\",\n            \"data\": {\n                \"advpn-select\": 1,\n                \"advpn-health-check\": [\n                    \"HUB\"\n                ]\n            }\n        },\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/wanprof/SPOKES/system/sdwan/members/4\",\n            \"data\": {\n                \"transport-group\": 2\n            }\n        },\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/wanprof/SPOKES/system/sdwan/members/6\",\n            \"data\": {\n                \"transport-group\": 2\n            }\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "14_SDWAN_Template_HUB",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"replace\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/wanprof/HUB/system/sdwan\",\n            \"data\": {\n                \"status\": 1,\n                \"load-balance-mode\": 2,\n                \"zone\": [\n                    {\n                        \"name\": \"virtual-wan-link\"\n                    },\n                    {\n                        \"name\": \"underlay\"\n                    },\n                    {\n                        \"name\": \"overlay\"\n                    }\n                ],\n                \"members\": [\n                    {\n                        \"seq-num\": 1,\n                        \"interface\": \"port1\",\n                        \"zone\": \"underlay\"\n                    },\n                    {\n                        \"seq-num\": 2,\n                        \"interface\": \"VPN1\",\n                        \"priority\": 10,\n                        \"zone\": \"overlay\"\n                    },\n                    {\n                        \"seq-num\": 3,\n                        \"interface\": \"VPN2\",\n                        \"priority\": 10,\n                        \"zone\": \"overlay\"\n                    }\n                ],\n                \"health-check\": [\n                    {\n                        \"name\": \"SPOKE\",\n                        \"detect-mode\": 4,\n                        \"members\": [\n                            \"2\",\n                            \"3\"\n                        ],\n                        \"sla-id-redistribute\": 1,\n                        \"sla\": [\n                            {\n                                \"id\": 1,\n                                \"link-cost-factor\": \"remote\",\n                                \"priority-in-sla\": 5,\n                                \"priority-out-sla\": 995\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"Internet\",\n                        \"server\": \"8.8.8.8\",\n                        \"protocol\": 64,\n                        \"members\": [\n                            \"1\"\n                        ],\n                        \"sla-fail-log-period\": 10,\n                        \"sla-pass-log-period\": 10,\n                        \"update-cascade-interface\": 0,\n                        \"update-static-route\": 0\n                    }\n                ]\n            }\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15_Static_Route_Template",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/template/_router_static/adom/{{adom}}/\",\n            \"data\": [\n                {\n                    \"name\": \"Underlay-Static\",\n                    \"type\": \"template\",\n                    \"template setting\": {\n                        \"stype\": \"_router_static\",\n                        \"widgets\": [\n                            \"_router_static\"\n                        ]\n                    }\n                }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16_Static_Route_Template_Route",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/template/_router_static/Underlay-Static/router/static/\",\n            \"data\": [\n                {\n                    \"seq-num\": 100,\n                    \"_seq-num\": 100,\n                    \"status\": \"enable\",\n                    \"dst\": [\n                        \"0.0.0.0\",\n                        \"0.0.0.0\"\n                    ],\n                    \"sdwan-zone\": [\n                        \"underlay\"\n                    ]\n                }\n            ]\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "17_Normalized_Interfaces",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/obj/dynamic/interface/\",\n            \"data\": [\n                {\n                    \"name\": \"LAN\",\n                    \"description\": \"LAN\",\n                    \"single-intf\": 1,\n                    \"default-mapping\": 1,\n                    \"defmap-intf\": \"port3\",\n                    \"color\": 2\n                },\n                {\n                    \"name\": \"Lo-HC\",\n                    \"description\": \"Health-Check\",\n                    \"single-intf\": 1,\n                    \"default-mapping\": 1,\n                    \"defmap-intf\": \"Lo-HC\",\n                    \"color\": 2\n                },\n                {\n                    \"name\": \"Lo-BGP\",\n                    \"description\": \"Main Loopback for BGP\",\n                    \"single-intf\": 1,\n                    \"default-mapping\": 1,\n                    \"defmap-intf\": \"Lo-BGP\",\n                    \"color\": 2\n                }\n            ]\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18_PolicyPackages",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/pkg/adom/{{adom}}\",\n            \"data\": [\n                {\n                    \"name\": \"SPOKES\",\n                    \"package settings\": {\n                        \"central-nat\": 0,\n                        \"consolidated-firewall-mode\": 0,\n                        \"fwpolicy-implicit-log\": 0,\n                        \"fwpolicy6-implicit-log\": 0,\n                        \"ngfw-mode\": 0\n                    },\n                    \"scope member\": {\n                        \"name\": \"spokes\"\n                    },\n                    \"type\": \"pkg\"\n                },\n                {\n                    \"name\": \"HUBS\",\n                    \"package settings\": {\n                        \"central-nat\": 0,\n                        \"consolidated-firewall-mode\": 0,\n                        \"fwpolicy-implicit-log\": 0,\n                        \"fwpolicy6-implicit-log\": 0,\n                        \"ngfw-mode\": 0\n                    },\n                    \"scope member\": [\n                        {\n                            \"name\": \"hub1\"\n                        },\n                        {\n                            \"name\": \"hub2\"\n                        }\n                    ],\n                    \"type\": \"pkg\"\n                }              \n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "19_PolicyPackage_HUB",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/pkg/HUBS/firewall/policy/\",\n            \"data\": [\n                {\n                    \"name\": \"SPOKE-SPOKE\",\n                    \"policyid\": 1,\n                    \"srcintf\": [\n                        \"overlay\"\n                    ],\n                    \"dstintf\": [\n                        \"overlay\"\n                    ],\n                    \"srcaddr\": \"CORP_LAN\",\n                    \"dstaddr\": \"CORP_LAN\",\n                    \"service\": \"ALL\",\n                    \"action\": 1,\n                    \"anti-replay\": 0,\n                    \"tcp-session-without-syn\": 0,\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 2\n                },\n                {\n                    \"name\": \"SPOKE-HUB\",\n                    \"policyid\": 2,\n                    \"srcintf\": [\n                        \"LAN\",\n                        \"overlay\"\n                    ],\n                    \"dstintf\": [\n                        \"LAN\",\n                        \"overlay\"\n                    ],\n                    \"srcaddr\": \"CORP_LAN\",\n                    \"dstaddr\": \"CORP_LAN\",\n                    \"service\": \"ALL\",\n                    \"action\": 1,\n                    \"utm-status\": 1,\n                    \"application-list\": [\n                        \"default\"\n                    ],\n                    \"ssl-ssh-profile\": [\n                        \"certificate-inspection\"\n                    ],\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 2\n                },\n                {\n                    \"name\": \"Internet (DIA)\",\n                    \"policyid\": 3,\n                    \"srcintf\": \"LAN\",\n                    \"dstintf\": \"underlay\",\n                    \"srcaddr\": \"all\",\n                    \"dstaddr\": \"all\",\n                    \"service\": \"ALL\",\n                    \"action\": 1,\n                    \"nat\": 1,\n                    \"utm-status\": 1,\n                    \"application-list\": [\n                        \"default\"\n                    ],\n                    \"ssl-ssh-profile\": [\n                        \"certificate-inspection\"\n                    ],\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 2\n                },\n                {\n                    \"name\": \"Health-Check\",\n                    \"policyid\": 4,\n                    \"srcintf\": [\n                        \"overlay\"\n                    ],\n                    \"dstintf\": \"Lo-HC\",\n                    \"srcaddr\": \"all\",\n                    \"dstaddr\": \"all\",\n                    \"service\": \"PING\",\n                    \"action\": 1,\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 3\n                },\n                {\n                    \"name\": \"Peering\",\n                    \"policyid\": 5,\n                    \"srcintf\": [\n                        \"overlay\"\n                    ],\n                    \"dstintf\": [\n                        \"Lo-BGP\"\n                    ],\n                    \"srcaddr\": \"all\",\n                    \"dstaddr\": \"all\",\n                    \"service\": [\n                        \"PING\",\n                        \"BGP\"\n                    ],\n                    \"action\": 1,\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 3\n                }\n            ]\n        }\n    ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "20_PolicyPackage_SPOKES",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/pkg/SPOKES/firewall/policy/\",\n            \"data\": [\n                {\n                    \"name\": \"Corporate\",\n                    \"policyid\": 1,\n                    \"srcintf\": [\n                        \"LAN\",\n                        \"overlay\"\n                    ],\n                    \"dstintf\": [\n                        \"LAN\",\n                        \"overlay\"\n                    ],\n                    \"srcaddr\": \"CORP_LAN\",\n                    \"dstaddr\": \"CORP_LAN\",\n                    \"service\": \"ALL\",\n                    \"action\": 1,\n                    \"utm-status\": 1,\n                    \"application-list\": [\n                        \"default\"\n                    ],\n                    \"ssl-ssh-profile\": [\n                        \"certificate-inspection\"\n                    ],\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 2\n                },\n                {\n                    \"name\": \"Internet (DIA)\",\n                    \"policyid\": 2,\n                    \"srcintf\": \"LAN\",\n                    \"dstintf\": \"underlay\",\n                    \"srcaddr\": \"all\",\n                    \"dstaddr\": \"all\",\n                    \"service\": \"ALL\",\n                    \"action\": 1,\n                    \"nat\": 1,\n                    \"utm-status\": 1,\n                    \"application-list\": [\n                        \"default\"\n                    ],\n                    \"ssl-ssh-profile\": [\n                        \"certificate-inspection\"\n                    ],\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 2\n                },\n                {\n                    \"name\": \"Peering\",\n                    \"policyid\": 3,\n                    \"srcintf\": [\n                        \"overlay\"\n                    ],\n                    \"dstintf\": \"Lo-BGP\",\n                    \"srcaddr\": \"all\",\n                    \"dstaddr\": \"all\",\n                    \"service\": [\n                        \"PING\",\n                        \"BGP\"\n                    ],\n                    \"action\": 1,\n                    \"profile-protocol-options\": [],\n                    \"status\": 1,\n                    \"schedule\": \"always\",\n                    \"logtraffic\": 3\n                }                \n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "21_Script_SPOKE_VPN",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"SPOKE_VPN\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n          \"script\": \"config system settings\\n  set location-id $(bgp_loopback)\\nend\\nconfig vpn ipsec phase1-interface\\n  edit \\\"H1_ISP1\\\"\\n    set interface \\\"$(wan1)\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"SPOKES\\\"\\n    set peertype any\\n    set keylife 28800\\n    set localid $(branch_id)\\n    set exchange-fgt-device-id enable\\n    set net-device enable\\n    set link-cost 0\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set idle-timeout enable\\n    set shared-idle-timeout enable\\n    set auto-discovery-receiver enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 11\\n    set remote-gw $(wan1_hub1)\\n    set dpd-retrycount 3\\n    set dpd-retryinterval 5\\n    set dpd on-idle    \\n    unset local-gw\\n    unset monitor\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"H1_ISP1\\\"\\n    set phase1name \\\"H1_ISP1\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n    set keylifeseconds 3600\\n  next\\nend\\nconfig vpn ipsec phase1-interface\\n  edit \\\"H1_ISP2\\\"\\n    set interface \\\"$(wan2)\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"SPOKES\\\"\\n    set peertype any\\n    set keylife 28800\\n    set localid $(branch_id)\\n    set exchange-fgt-device-id enable\\n    set net-device enable\\n    set link-cost 0\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set idle-timeout enable\\n    set shared-idle-timeout enable\\n    set auto-discovery-receiver enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 12\\n    set remote-gw $(wan1_hub1)\\n    set dpd-retrycount 3\\n    set dpd-retryinterval 5\\n    set dpd on-idle    \\n    unset local-gw\\n    unset monitor\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"H1_ISP2\\\"\\n    set phase1name \\\"H1_ISP2\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n    set keylifeseconds 3600\\n  next\\nend\\nconfig vpn ipsec phase1-interface\\n  edit \\\"H2_ISP1\\\"\\n    set interface \\\"$(wan1)\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"SPOKES\\\"\\n    set peertype any\\n    set keylife 28800\\n    set localid $(branch_id)\\n    set exchange-fgt-device-id enable\\n    set net-device enable\\n    set link-cost 0\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set idle-timeout enable\\n    set shared-idle-timeout enable\\n    set auto-discovery-receiver enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 21\\n    set remote-gw $(wan1_hub2)\\n    set dpd-retrycount 3\\n    set dpd-retryinterval 5\\n    set dpd on-idle    \\n    unset local-gw\\n    unset monitor\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"H2_ISP1\\\"\\n    set phase1name \\\"H2_ISP1\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n    set keylifeseconds 3600\\n  next\\nend\\nconfig vpn ipsec phase1-interface\\n  edit \\\"H2_ISP2\\\"\\n    set interface \\\"$(wan2)\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"SPOKES\\\"\\n    set peertype any\\n    set keylife 28800\\n    set localid $(branch_id)\\n    set exchange-fgt-device-id enable\\n    set net-device enable\\n    set link-cost 0\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set idle-timeout enable\\n    set shared-idle-timeout enable\\n    set auto-discovery-receiver enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 22\\n    set remote-gw $(wan1_hub2)\\n    set dpd-retrycount 3\\n    set dpd-retryinterval 5\\n    set dpd on-idle    \\n    unset local-gw\\n    unset monitor\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"H2_ISP2\\\"\\n    set phase1name \\\"H2_ISP2\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n    set keylifeseconds 3600\\n  next\\nend\\n\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_loopback\",\n          \"branch_id\",\n          \"wan1\",\n          \"wan1_hub1\",\n          \"wan1_hub2\",\n          \"wan2\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "22_Script_SPOKE_GENERAL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"SPOKE_GENERAL\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n          \"script\": \"config system global\\n  set hostname BRANCH-$(branch_id)\\nend\\nconfig system settings\\n  set location-id $(bgp_loopback)\\n  set ike-tcp-port 10443\\nend\\nconfig system interface\\n  edit \\\"$(wan1)\\\"\\n    set mode dhcp\\n    set vrf 0\\n    unset egress-shaping-profile\\n    unset ingress-shaping-profile\\n    unset outbandwidth\\n    unset inbandwidth\\n    unset estimated-upstream-bandwidth \\n    unset estimated-downstream-bandwidth \\n    set role wan\\n    set allowaccess ping https fgfm ssh \\n  next\\nend\\nconfig system interface\\n  edit \\\"$(wan2)\\\"\\n    set mode dhcp\\n    set vrf 0\\n    unset egress-shaping-profile\\n    unset ingress-shaping-profile\\n    unset outbandwidth\\n    unset inbandwidth\\n    unset estimated-upstream-bandwidth \\n    unset estimated-downstream-bandwidth \\n    set role wan\\n    set allowaccess ping https fgfm ssh \\n  next\\nend\\nconfig system interface\\n  edit \\\"port3\\\"\\n    set mode static\\n    set ip 192.168.$(branch_id).1/24\\n    set vrf 0\\n    set dhcp-relay-service disable\\n    set role lan\\n    set device-identification enable\\n    set allowaccess ping https \\n  next\\nend\\nconfig system interface\\n  edit \\\"Lo-BGP\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan     \\n    set ip 10.200.1.$(branch_id)/32\\n    set allowaccess ping\\n  next\\nend\\nconfig system dhcp server\\n  edit 10\\n    set dns-service default\\n    set default-gateway 192.168.$(branch_id).1\\n    set netmask 255.255.255.0\\n    set interface port3\\n    config ip-range\\n      edit 1\\n        set start-ip 192.168.$(branch_id).10\\n        set end-ip 192.168.$(branch_id).100\\n      next\\n    end\\n  next\\nend\\n\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_loopback\",\n          \"branch_id\",\n          \"wan1\",\n          \"wan2\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "23_Script_SPOKE_ROUTING",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"SPOKE_ROUTING\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n        \"script\": \"config router aspath-list\\n  edit \\\"SDWAN_AS\\\"\\n    config rule\\n      purge\\n      edit 1\\n        set action permit\\n        set regexp \\\"$(bgp_as)\\\"\\n      next\\n      edit 2\\n        set action permit\\n        set regexp \\\"$(bgp_as)\\\"\\n      next\\n    end\\n  next\\nend\\nconfig router route-map\\n  edit \\\"H1_TAG\\\"\\n    config rule\\n      edit 1\\n        set set-tag 1\\n      next\\n    end\\n  next\\n  edit \\\"H2_TAG\\\"\\n    config rule\\n      edit 1\\n        set set-tag 2\\n      next\\n    end\\n  next\\n  edit \\\"LAN_TAG\\\"\\n    config rule\\n      edit 1\\n        set set-tag 100\\n      next\\n    end\\n  next\\n  edit \\\"LAN_OUT\\\"\\n    config rule\\n      edit 1\\n        set match-tag 100\\n      next\\n    end  \\n  next\\nend\\nconfig router bgp\\n  set as $(bgp_as)\\n  set router-id $(bgp_loopback)\\n  set keepalive-timer 15\\n  set holdtime-timer 45\\n  set ibgp-multipath enable\\n  set recursive-next-hop enable\\n  set tag-resolve-mode disable\\n  set graceful-restart enable\\n  config neighbor\\n    purge\\n    edit $(loopback_bgp_h1)\\n      set soft-reconfiguration enable\\n      set capability-graceful-restart enable\\n      set advertisement-interval 1\\n      set interface \\\"Lo-BGP\\\"\\n      set update-source \\\"Lo-BGP\\\"\\n      set connect-timer 1\\n      set remote-as $(bgp_as)\\n      unset route-map-in\\n      unset soft-reconfiguration-vpnv4\\n      unset capability-graceful-restart-vpnv4\\n      unset route-map-in-vpnv4\\n    next\\n    edit $(loopback_bgp_h2)\\n      set soft-reconfiguration enable\\n      set capability-graceful-restart enable\\n      set advertisement-interval 1\\n      set interface \\\"Lo-BGP\\\"\\n      set update-source \\\"Lo-BGP\\\"\\n      set connect-timer 1\\n      set remote-as $(bgp_as)\\n      unset route-map-in\\n      unset soft-reconfiguration-vpnv4\\n      unset capability-graceful-restart-vpnv4\\n      unset route-map-in-vpnv4\\n    next\\n  end\\n  config neighbor-range\\n    purge\\n  end\\n  config neighbor-group\\n    purge\\n  end\\n  config neighbor-group\\n    edit \\\"DYN_SPOKES\\\"\\n      set ebgp-enforce-multihop enable \\n      set soft-reconfiguration enable\\n      set capability-graceful-restart enable\\n      set advertisement-interval 1\\n      set next-hop-self enable\\n      set remote-as-filter \\\"SDWAN_AS\\\"\\n      set interface \\\"Lo-BGP\\\"\\n      set update-source \\\"Lo-BGP\\\"\\n      set passive disable\\n      unset route-map-out-vpnv4\\n      set route-map-out \\\"LAN_OUT\\\"\\n      unset soft-reconfiguration-vpnv4\\n      unset capability-graceful-restart-vpnv4\\n    next\\n  end\\n  config neighbor-range\\n    edit 101\\n      set prefix $(bgp_as_subnet)\\n      set neighbor-group \\\"DYN_SPOKES\\\"\\n    next\\n  end  \\n  config network\\n    purge\\n    edit 111\\n      set prefix $(lan_subnet)\\n      set route-map \\\"LAN_TAG\\\"\\n    next\\n  end\\n  config vrf\\n    purge\\n  end\\nend\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_as\",\n          \"bgp_as_subnet\",\n          \"bgp_loopback\",\n          \"lan_subnet\",\n          \"loopback_bgp_h1\",\n          \"loopback_bgp_h2\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "24_Script_HUB1_VPN",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"add\",\n    \"params\": [\n        {\n            \"data\": [\n                {\n                    \"description\": \"string\",\n                    \"name\": \"HUB1_VPN\",\n                    \"position\": \"post-vdom-copy\",\n                    \"provision\": \"disable\",\n                    \"script\": \"config vpn ipsec phase1-interface\\n  edit \\\"VPN1\\\"\\n    set type dynamic\\n    set interface \\\"port1\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"HUB\\\"\\n    set peertype any\\n    set localid HUB1-1\\n    set exchange-fgt-device-id enable\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set auto-discovery-sender enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 11\\n    set dpd-retrycount 2\\n    set dpd-retryinterval 5\\n    set dpd on-idle\\n    unset local-gw\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"VPN1\\\"\\n    set phase1name \\\"VPN1\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n  next\\nend\\nconfig vpn ipsec phase1-interface\\n  edit \\\"VPN2\\\"\\n    set type dynamic\\n    set interface \\\"port1\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"HUB\\\"\\n    set peertype any\\n    set localid HUB1-2\\n    set exchange-fgt-device-id enable\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set auto-discovery-sender enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 12\\n    set dpd-retrycount 2\\n    set dpd-retryinterval 5\\n    set dpd on-idle\\n    unset local-gw\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"VPN2\\\"\\n    set phase1name \\\"VPN2\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n  next\\nend\",\n                    \"type\": \"cli\",\n                    \"variables\": [\n                        \"bgp_loopback\"\n                    ]\n                }\n            ],\n            \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "25_Script_HUB1_GENERAL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"HUB1_GENERAL\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n        \"script\": \"config system global\\n  set hostname HUB1\\nend\\nconfig system settings\\n  set location-id $(bgp_loopback)\\n  set tcp-session-without-syn enable\\n  set ike-tcp-port 10443\\nend\\nconfig system interface\\n  edit \\\"$(wan1)\\\"\\n    set mode static\\n    set ip $(wan1_hub1) 255.255.255.0\\n    set vrf 0\\n    unset egress-shaping-profile\\n    unset ingress-shaping-profile\\n    unset outbandwidth\\n    unset inbandwidth\\n    unset estimated-upstream-bandwidth \\n    unset estimated-downstream-bandwidth \\n    set role wan\\n    set allowaccess ping https fgfm \\n  next\\nend\\nconfig system interface\\n  edit \\\"port3\\\"\\n    set mode static\\n    set ip 192.168.251.1/24\\n    set vrf 0\\n    set dhcp-relay-service disable\\n    set role lan\\n    set device-identification enable\\n    set allowaccess ping https \\n  next\\nend\\nconfig system interface\\n  edit \\\"Lo-BGP\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan    \\n    set ip $(bgp_loopback)/32\\n    set allowaccess ping\\n  next\\nend\\nconfig system interface\\n  edit \\\"Lo-HC\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan     \\n    set ip $(loopback_bgp_hub_hc)/32\\n    set allowaccess ping\\n  next\\nend\\nconfig system dhcp server\\n  edit 10\\n    set dns-service default\\n    set default-gateway 192.168.251.1\\n    set netmask 255.255.255.0\\n    set interface port3\\n    config ip-range\\n      edit 1\\n        set start-ip 192.168.251.10\\n        set end-ip 192.168.251.100\\n      next\\n    end\\n  next\\nend\\n\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_loopback\",\n          \"loopback_bgp_hub_hc\",\n          \"wan1\",\n          \"wan1_hub1\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "26_Script_HUB1_ROUTING",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"HUB1_ROUTING\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n        \"script\": \"config router route-map\\n  edit \\\"LOCAL_REGION\\\"\\n    config rule\\n      edit 1\\n        set set-community \\\"no-export\\\"\\n        set set-tag 100\\n      next\\n    end\\n  next\\n  edit \\\"LAN_TAG\\\"\\n    config rule\\n      edit 1\\n        set set-tag 100\\n      next\\n    end\\n  next \\n  edit \\\"SPOKES_OUT\\\"\\n    config rule\\n      edit 100\\n      next\\n    end\\n  next \\nend\\nconfig router bgp\\n  set as $(bgp_as)\\n  set router-id $(bgp_loopback)\\n  set keepalive-timer 15\\n  set holdtime-timer 45\\n  set ibgp-multipath enable\\n  set ebgp-multipath enable\\n  set recursive-next-hop enable\\n  set recursive-inherit-priority enable\\n  set graceful-restart enable\\n  config neighbor-range\\n    purge\\n  end\\n  config neighbor-group\\n    purge\\n  end\\n  config aggregate-address\\n    purge\\n  end\\n  config neighbor-group\\n    edit SPOKES\\n      set soft-reconfiguration enable\\n      set capability-graceful-restart enable\\n      set advertisement-interval 1\\n      set next-hop-self enable\\n      set remote-as $(bgp_as)\\n      set interface \\\"Lo-BGP\\\"\\n      set update-source \\\"Lo-BGP\\\"\\n      unset route-reflector-client-vpnv4\\n      set route-reflector-client disable\\n      unset route-map-out-vpnv4\\n      set route-map-out \\\"SPOKES_OUT\\\"          \\n      unset soft-reconfiguration-vpnv4\\n      unset capability-graceful-restart-vpnv4\\n    next\\n  end\\n  config neighbor-range\\n    edit 101\\n      set prefix 10.200.1.0/24\\n      set neighbor-group \\\"SPOKES\\\"\\n    next\\n  end\\n  config aggregate-address\\n    edit 111\\n      set prefix 192.168.0.0/16\\n    next\\n  end\\n  config network\\n    edit 102\\n      set prefix 10.200.0.0/24\\n      set route-map \\\"LOCAL_REGION\\\"\\n    next  \\n    edit 111\\n      set prefix 192.168.251.0/24\\n      set route-map \\\"LAN_TAG\\\"\\n    next\\n  end\\n  config vrf\\n    purge\\n  end\\nend\\nconfig router policy\\n  purge\\nend\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_as\",\n          \"bgp_loopback\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "27_Script_HUB2_VPN",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"HUB2_VPN\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n        \"script\": \"config vpn ipsec phase1-interface\\n  edit \\\"VPN1\\\"\\n    set type dynamic\\n    set interface \\\"port1\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"HUB\\\"\\n    set peertype any\\n    set localid HUB2-1\\n    set exchange-fgt-device-id enable\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set auto-discovery-sender enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 21\\n    set dpd-retrycount 2\\n    set dpd-retryinterval 5\\n    set dpd on-idle\\n    unset local-gw\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"VPN1\\\"\\n    set phase1name \\\"VPN1\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n  next\\nend\\nconfig vpn ipsec phase1-interface\\n  edit \\\"VPN2\\\"\\n    set type dynamic\\n    set interface \\\"port1\\\"\\n    set ike-version 2\\n    set transport udp\\n    set authmethod signature\\n    set certificate \\\"HUB\\\"\\n    set peertype any\\n    set localid HUB2-2\\n    set exchange-fgt-device-id enable\\n    set proposal aes256gcm-prfsha256 aes256-sha256\\n    set auto-discovery-sender enable\\n    set add-route disable\\n    set encapsulation none\\n    set exchange-ip-addr4 $(bgp_loopback)\\n    set network-overlay enable\\n    set network-id 22\\n    set dpd-retrycount 2\\n    set dpd-retryinterval 5\\n    set dpd on-idle\\n    unset local-gw\\n  next\\nend\\nconfig vpn ipsec phase2-interface\\n  edit \\\"VPN2\\\"\\n    set phase1name \\\"VPN2\\\"\\n    set proposal aes256gcm\\n    set keepalive enable\\n  next\\nend\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_loopback\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "28_Script_HUB2_GENERAL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"HUB2_GENERAL\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n        \"script\": \"config system global\\n  set hostname HUB2\\nend\\nconfig system settings\\n  set location-id $(bgp_loopback)\\n  set tcp-session-without-syn enable\\n  set ike-tcp-port 10443\\nend\\nconfig system interface\\n  edit \\\"$(wan1)\\\"\\n    set mode static\\n    set ip $(wan1_hub2) 255.255.255.0\\n    set vrf 0\\n    unset egress-shaping-profile\\n    unset ingress-shaping-profile\\n    unset outbandwidth\\n    unset inbandwidth\\n    unset estimated-upstream-bandwidth \\n    unset estimated-downstream-bandwidth \\n    set role wan\\n    set allowaccess ping https fgfm \\n  next\\nend\\nconfig system interface\\n  edit \\\"port3\\\"\\n    set mode static\\n    set ip 192.168.252.1/24\\n    set vrf 0\\n    set dhcp-relay-service disable\\n    set role lan\\n    set device-identification enable\\n    set allowaccess ping https \\n  next\\nend\\nconfig system interface\\n  edit \\\"Lo-BGP\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan    \\n    set ip $(bgp_loopback)/32\\n    set allowaccess ping\\n  next\\nend\\nconfig system interface\\n  edit \\\"Lo-HC\\\"\\n    set vdom root\\n    set type loopback\\n    set vrf 0\\n    set role lan     \\n    set ip $(loopback_bgp_hub_hc)/32\\n    set allowaccess ping\\n  next\\nend\\nconfig system dhcp server\\n  edit 10\\n    set dns-service default\\n    set default-gateway 192.168.252.1\\n    set netmask 255.255.255.0\\n    set interface port3\\n    config ip-range\\n      edit 1\\n        set start-ip 192.168.252.10\\n        set end-ip 192.168.252.100\\n      next\\n    end\\n  next\\nend\\n\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_loopback\",\n          \"loopback_bgp_hub_hc\",\n          \"wan1\",\n          \"wan1_hub2\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "29_Script_HUB2_ROUTING",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"add\",\n  \"params\": [\n    {\n      \"data\": [\n        {\n          \"description\": \"string\",\n          \"name\": \"HUB2_ROUTING\",\n          \"position\": \"post-vdom-copy\",\n          \"provision\": \"disable\",\n        \"script\": \"config router route-map\\n  edit \\\"LOCAL_REGION\\\"\\n    config rule\\n      edit 1\\n        set set-community \\\"no-export\\\"\\n        set set-tag 100\\n      next\\n    end\\n  next\\n  edit \\\"LAN_TAG\\\"\\n    config rule\\n      edit 1\\n        set set-tag 100\\n      next\\n    end\\n  next \\n  edit \\\"SPOKES_OUT\\\"\\n    config rule\\n      edit 100\\n      next\\n    end\\n  next \\nend\\nconfig router bgp\\n  set as $(bgp_as)\\n  set router-id $(bgp_loopback)\\n  set keepalive-timer 15\\n  set holdtime-timer 45\\n  set ibgp-multipath enable\\n  set ebgp-multipath enable\\n  set recursive-next-hop enable\\n  set recursive-inherit-priority enable\\n  set graceful-restart enable\\n  config neighbor-range\\n    purge\\n  end\\n  config neighbor-group\\n    purge\\n  end\\n  config aggregate-address\\n    purge\\n  end\\n  config neighbor-group\\n    edit SPOKES\\n      set soft-reconfiguration enable\\n      set capability-graceful-restart enable\\n      set advertisement-interval 1\\n      set next-hop-self enable\\n      set remote-as $(bgp_as)\\n      set interface \\\"Lo-BGP\\\"\\n      set update-source \\\"Lo-BGP\\\"\\n      unset route-reflector-client-vpnv4\\n      set route-reflector-client disable\\n      unset route-map-out-vpnv4\\n      set route-map-out \\\"SPOKES_OUT\\\"          \\n      unset soft-reconfiguration-vpnv4\\n      unset capability-graceful-restart-vpnv4\\n    next\\n  end\\n  config neighbor-range\\n    edit 101\\n      set prefix 10.200.1.0/24\\n      set neighbor-group \\\"SPOKES\\\"\\n    next\\n  end\\n  config aggregate-address\\n    edit 111\\n      set prefix 192.168.0.0/16\\n    next\\n  end\\n  config network\\n    edit 102\\n      set prefix 10.200.0.0/24\\n      set route-map \\\"LOCAL_REGION\\\"\\n    next  \\n    edit 111\\n      set prefix 192.168.252.0/24\\n      set route-map \\\"LAN_TAG\\\"\\n    next\\n  end\\n  config vrf\\n    purge\\n  end\\nend\\nconfig router policy\\n  purge\\nend\",\n          \"type\": \"cli\",\n          \"variables\": [\n          \"bgp_as\",\n          \"bgp_loopback\"\n        ]\n        }\n      ],\n      \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "30_CLI_Template_Groups",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/obj/cli/template-group\",\n            \"data\": [\n                {\n                    \"name\": \"HUB1\",\n                    \"member\": [\n                        \"HUB1_GENERAL\",\n                        \"HUB1_VPN\",\n                        \"HUB1_ROUTING\"\n                    ]\n                },\n                {\n                    \"name\": \"HUB2\",\n                    \"member\": [\n                        \"HUB2_GENERAL\",\n                        \"HUB2_VPN\",\n                        \"HUB2_ROUTING\"\n                    ]\n                },\n                {\n                    \"name\": \"SPOKES\",\n                    \"member\": [\n                        \"SPOKE_GENERAL\",\n                        \"SPOKE_ROUTING\",\n                        \"SPOKE_VPN\"\n                    ]\n                }                \n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "31_Template_Group_HUB1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"set\",\n  \"params\": [\n    {\n      \"url\": \"/pm/tmplgrp/adom/{{adom}}\",\n      \"data\": {\n        \"name\": \"HUB1\",\n        \"type\": \"tmplgrp\",\n        \"scope member\": [],\n        \"template group setting\": {\n          \"description\": \"\",\n          \"cliprofs\": [\n            \"HUB1\"\n          ],\n          \"wtpprofs\": [],\n          \"fspprofs\": [],\n          \"fxtprofs\": [],\n          \"templates\": [\n            \"1__Basic-Settings\",\n            \"4-2__Underlay-Static\",\n            \"5__HUB\"\n          ]\n        }\n      }\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "32_Template_Group_HUB2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"set\",\n  \"params\": [\n    {\n      \"url\": \"/pm/tmplgrp/adom/{{adom}}\",\n      \"data\": {\n        \"name\": \"HUB2\",\n        \"type\": \"tmplgrp\",\n        \"scope member\": [],\n        \"template group setting\": {\n          \"description\": \"\",\n          \"cliprofs\": [\n            \"HUB2\"\n          ],\n          \"wtpprofs\": [],\n          \"fspprofs\": [],\n          \"fxtprofs\": [],\n          \"templates\": [\n            \"1__Basic-Settings\",\n            \"4-2__Underlay-Static\",\n            \"5__HUB\"\n          ]\n        }\n      }\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "33_Template_Group_SPOKES",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session\": \"{{session}}\",\n  \"id\": 1,\n  \"method\": \"set\",\n  \"params\": [\n    {\n      \"url\": \"/pm/tmplgrp/adom/{{adom}}\",\n      \"data\": {\n        \"name\": \"SPOKES\",\n        \"type\": \"tmplgrp\",\n        \"scope member\": [],\n        \"template group setting\": {\n          \"description\": \"\",\n          \"cliprofs\": [\n            \"SPOKES\"\n          ],\n          \"wtpprofs\": [],\n          \"fspprofs\": [],\n          \"fxtprofs\": [],\n          \"templates\": [\n            \"1__Basic-Settings\",\n            \"4-2__Underlay-Static\",\n            \"5__SPOKES\"\n          ]\n        }\n      }\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "34_Update_Template_Group_HUB1_Scope",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": \"1\",\n    \"method\": \"update\",\n    \"params\": [\n        {\n            \"url\": \"pm/tmplgrp/adom/{{adom}}\",\n            \"data\": [\n                {\n                    \"name\": \"HUB1\",\n                    \"type\": \"tmplgrp\",\n                    \"scope member\": [\n                        {\n                            \"name\": \"hub1\",\n                            \"is group\": 1\n                        }\n                    ]\n                    }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "35_Update_Template_Group_HUB2_Scope",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": \"1\",\n    \"method\": \"update\",\n    \"params\": [\n        {\n            \"url\": \"pm/tmplgrp/adom/{{adom}}\",\n            \"data\": [\n                {\n                    \"name\": \"HUB2\",\n                    \"type\": \"tmplgrp\",\n                    \"scope member\": [\n                        {\n                            \"name\": \"hub2\",\n                            \"is group\": 1\n                        }\n                    ]\n                    }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "36_Update_Template_Group_SPOKES_Scope",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": \"1\",\n    \"method\": \"update\",\n    \"params\": [\n        {\n            \"url\": \"pm/tmplgrp/adom/{{adom}}\",\n            \"data\": [\n                {\n                    \"name\": \"SPOKES\",\n                    \"type\": \"tmplgrp\",\n                    \"scope member\": [\n                        {\n                            \"name\": \"spokes\",\n                            \"is group\": 1\n                        }\n                    ]\n                    }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "37_Device_Blueprints",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/obj/fmg/device/blueprint\",\n            \"data\": [\n                {\n                    \"name\": \"HUB1\",\n                    \"dev-group\": \"hub1\",\n                    \"prov-type\": \"template-group\",\n                    \"template-group\": \"HUB1\",\n                    \"pkg\": \"HUBS\",\n                    \"platform\": \"FortiGate-VM64-KVM\",\n                    \"vm-log-disk\": 1,\n                    \"port-provisioning\": 4\n                },\n                {\n                    \"name\": \"HUB2\",\n                    \"dev-group\": \"hub2\",\n                    \"prov-type\": \"template-group\",\n                    \"template-group\": \"HUB2\",\n                    \"pkg\": \"HUBS\",\n                    \"platform\": \"FortiGate-VM64-KVM\",\n                    \"vm-log-disk\": 1,\n                    \"port-provisioning\": 4\n                },                \n                {\n                    \"name\": \"SPOKES\",\n                    \"dev-group\": \"spokes\",\n                    \"prov-type\": \"template-group\",\n                    \"template-group\": \"SPOKES\",\n                    \"pkg\": \"SPOKES\",\n                    \"platform\": \"FortiGate-VM64-KVM\",\n                    \"vm-log-disk\": 1,\n                    \"port-provisioning\": 4\n                }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{ip}}/jsonrpc",
+          "protocol": "https",
+          "host": [
+            "{{ip}}"
+          ],
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

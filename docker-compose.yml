@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: fmg-provisioner
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./postman_collection.json:/app/postman_collection.json
+    restart: unless-stopped

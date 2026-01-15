@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FortiManager Provisioning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+        <div class="globe globe-3"></div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>FMG Provisioner</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="login-card glass-panel" id="login-card">
+                <div class="card-header">
+                    <h2>Connect to FMG</h2>
+                    <p>Enter your credentials to start a session</p>
+                </div>
+
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="ip">IP Address</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-server"></i>
+                            <input type="text" id="ip" placeholder="e.g. 192.168.1.99" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="username" placeholder="admin" required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="login-btn">
+                        <span class="btn-text">Connect</span>
+                        <div class="loader" id="btn-loader"></div>
+                    </button>
+                </form>
+
+                <div class="status-message" id="status-message"></div>
+
+                <div style="text-align: center; margin-top: 1rem;">
+                    <a href="editor.html"
+                        style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;"
+                        onmouseover="this.style.color='var(--primary-color)'"
+                        onmouseout="this.style.color='var(--text-muted)'">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Collection
+                    </a>
+                </div>
+            </div>
+
+            <div class="dashboard glass-panel hidden" id="dashboard">
+                <div class="success-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2>Session Established</h2>
+                <div class="session-info">
+                    <p>Session ID</p>
+                    <code id="session-id-display"></code>
+                </div>
+
+                <div class="config-section">
+                    <h3>Global Configuration</h3>
+
+                    <div class="input-group">
+                        <label for="adom">ADOM Name</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-folder-tree"></i>
+                            <input type="text" id="adom" placeholder="root" value="root">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dns_primary">DNS Primary</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-server"></i>
+                            <input type="text" id="dns_primary" value="8.8.8.8">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dns_secondary">DNS Secondary</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-server"></i>
+                            <input type="text" id="dns_secondary" value="1.1.1.1">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="faz_target_ip">FortiAnalyzer IP</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-cloud"></i>
+                            <input type="text" id="faz_target_ip" value="100.127.10.11">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="faz_target_sn">FortiAnalyzer Serial</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-barcode"></i>
+                            <input type="text" id="faz_target_sn" value="FMVMMLTM25000000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Provisioning Options</h3>
+                    <div class="input-group">
+                        <label for="provision-scope">Scope</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-list-check"></i>
+                            <select id="provision-scope"
+                                style="width: 100%; background: var(--input-bg); border: 1px solid var(--glass-border); color: white; padding: 14px 14px 14px 45px; border-radius: 12px; font-size: 1rem; outline: none; appearance: none;">
+                                <option value="all">Run All Steps</option>
+                                <option value="single">Run Single Step</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down" style="left: auto; right: 16px;"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group hidden" id="step-selection-container">
+                        <label for="step-select">Select Step</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-shoe-prints"></i>
+                            <select id="step-select"
+                                style="width: 100%; background: var(--input-bg); border: 1px solid var(--glass-border); color: white; padding: 14px 14px 14px 45px; border-radius: 12px; font-size: 1rem; outline: none; appearance: none;">
+                                <option value="" disabled selected>Loading steps...</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down" style="left: auto; right: 16px;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn-primary" id="provision-btn" style="margin-bottom: 1rem;">Run
+                        Provisioning</button>
+                    <button class="btn-secondary" id="logout-btn">Disconnect</button>
+                </div>
+
+                <div id="provision-results" class="results-container hidden">
+                    <h3>Provisioning Results</h3>
+                    <div id="results-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
