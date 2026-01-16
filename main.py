@@ -143,6 +143,9 @@ async def run_provision(req: ProvisionRequest):
             # Substitute variables
             processed_body = substitute_variables(raw_body, variables)
             
+            # Substitute variables
+            processed_body = substitute_variables(raw_body, variables)
+            
             # Parse JSON
             try:
                 payload = json.loads(processed_body)
