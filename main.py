@@ -87,6 +87,8 @@ class ProvisionRequest(BaseModel):
     dns_secondary: str
     faz_target_ip: str
     faz_target_sn: str
+    corp_lan_subnet: str
+    corp_lan_netmask: str
     scope: str
     step_name: Optional[str] = None
 
@@ -120,6 +122,8 @@ async def run_provision(req: ProvisionRequest):
             "dns_secondary": req.dns_secondary,
             "faz_target_ip": req.faz_target_ip,
             "faz_target_sn": req.faz_target_sn,
+            "corp_lan_subnet": req.corp_lan_subnet,
+            "corp_lan_netmask": req.corp_lan_netmask,
         }
 
         results = []

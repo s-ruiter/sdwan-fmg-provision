@@ -87,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
             dns_secondary: document.getElementById('dns_secondary').value,
             faz_target_ip: document.getElementById('faz_target_ip').value,
             faz_target_sn: document.getElementById('faz_target_sn').value,
+            corp_lan_subnet: document.getElementById('corp_lan_subnet').value,
+            corp_lan_netmask: document.getElementById('corp_lan_netmask').value,
             session: sessionIdDisplay.textContent,
             scope: provisionScope.value,
             step_name: provisionScope.value === 'single' ? stepSelect.value : null
