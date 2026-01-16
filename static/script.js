@@ -135,7 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsContainer.classList.remove('hidden');
 
         } catch (error) {
-            alert('Error: ' + error.message);
+            console.error('Provisioning error:', error);
+            const msg = typeof error.message === 'object' ? JSON.stringify(error.message) : error.message;
+            alert('Error: ' + msg);
         } finally {
             provisionBtn.disabled = false;
             provisionBtn.textContent = 'Run Provisioning';
