@@ -120,21 +120,6 @@ async def run_provision(req: ProvisionRequest):
             "dns_secondary": req.dns_secondary,
             "faz_target_ip": req.faz_target_ip,
             "faz_target_sn": req.faz_target_sn,
-            # Defaults/Hardcoded for now as they weren't in the input list requested
-            "branch_id": "100", 
-            "wan1": "port1",
-            "wan2": "port2",
-            "wan1_hub1": "10.0.1.1",
-            "wan1_hub2": "10.0.2.1",
-            "corp_lan_subnet": "10.100.0.0",
-            "corp_lan_netmask": "255.255.255.0",
-            "lan_subnet": "10.100.1.0/24",
-            "bgp_loopback": "10.200.1.1",
-            "bgp_as": "65000",
-            "bgp_as_subnet": "10.200.0.0/16",
-            "loopback_bgp_hub_hc": "10.200.255.1",
-            "loopback_bgp_h1": "10.200.255.1",
-            "loopback_bgp_h2": "10.200.255.2"
         }
 
         results = []
@@ -144,9 +129,9 @@ async def run_provision(req: ProvisionRequest):
             # Skip if no request body
             if "request" not in item:
                 continue
-                
-            # Skip login step as we already have a session
-            # if item["name"] == "01_Login": continue 
+
+            # Skip Login step as we already have a session and don't have credentials here
+            if item["name"] == "Login": continue 
 
             # Get raw body
             raw_body = item["request"].get("body", {}).get("raw", "")
