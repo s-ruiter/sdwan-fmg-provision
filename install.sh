@@ -1,31 +1,38 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
+# Check for sudo/root
+if [ "$EUID" -ne 0 ]; then 
+  echo "Please run with sudo: sudo ./install-docker.sh"
+  exit 1
+fi
+
 set -e
 
-echo "--- Starting Docker and Docker Compose installation ---"
+echo "--- Detected Ubuntu 22.04 (Jammy) ---"
 
-# 1. Update package index and install prerequisites
-sudo apt-get update
-sudo apt-get install -y ca-certificates curl gnupg
+# 1. Clean up the old (wrong) repository file if it exists
+rm -f /etc/apt/sources.list.d/docker.list
 
-# 2. Add Docker's official GPG key
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
+# 2. Update and install prerequisites
+apt-get update
+apt-get install -y ca-certificates curl gnupg
 
-# 3. Set up the repository
+# 3. Setup GPG Key
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+
+# 4. Add the UBUNTU Repository
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# 4. Install Docker Engine and Docker Compose Plugin
-sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# 5. Install Docker
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# 5. Verify installation
-echo "--- Verifying Installation ---"
+echo "--- Installation Successful! ---"
 docker --version
 docker compose version
 
