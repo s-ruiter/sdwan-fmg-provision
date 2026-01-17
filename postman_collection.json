@@ -621,48 +621,156 @@
             "response": []
         },
         {
-            "name": "14_SDWAN_Template_HUB",
-            "event": [
+            "session": "{{session}}",
+            "id": 1,
+            "method": "replace",
+            "params": [
                 {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            ""
+                    "url": "/pm/config/adom/{{adom}}/wanprof/HUB/system/sdwan",
+                    "data": {
+                        "status": 1,
+                        "load-balance-mode": 2,
+                        "zone": [
+                            {
+                                "name": "virtual-wan-link"
+                            },
+                            {
+                                "name": "underlay"
+                            },
+                            {
+                                "name": "overlay"
+                            }
                         ],
-                        "type": "text/javascript",
-                        "packages": {}
+                        "members": [
+                            {
+                                "seq-num": 1,
+                                "interface": "port1",
+                                "zone": "underlay",
+                                "gateway": "$(wan1_gw)"
+                            },
+                            {
+                                "seq-num": 2,
+                                "interface": "VPN1",
+                                "priority": 10,
+                                "zone": "overlay"
+                            },
+                            {
+                                "seq-num": 3,
+                                "interface": "VPN2",
+                                "priority": 10,
+                                "zone": "overlay"
+                            }
+                        ],
+                        "health-check": [
+                            {
+                                "name": "SPOKE",
+                                "detect-mode": 4,
+                                "members": [
+                                    "2",
+                                    "3"
+                                ],
+                                "sla-id-redistribute": 1,
+                                "sla": [
+                                    {
+                                        "id": 1,
+                                        "link-cost-factor": "remote",
+                                        "priority-in-sla": 5,
+                                        "priority-out-sla": 995
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Internet",
+                                "server": "8.8.8.8",
+                                "protocol": 64,
+                                "members": [
+                                    "1"
+                                ],
+                                "sla-fail-log-period": 10,
+                                "sla-pass-log-period": 10,
+                                "update-cascade-interface": 0,
+                                "update-static-route": 0
+                            }
+                        ]
                     }
                 }
-            ],
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
+            ]
+        },
+        {
+            "session": "{{session}}",
+            "id": 1,
+            "method": "replace",
+            "params": [
+                {
+                    "url": "/pm/config/adom/{{adom}}/wanprof/HUB/system/sdwan",
+                    "data": {
+                        "status": 1,
+                        "load-balance-mode": 2,
+                        "zone": [
+                            {
+                                "name": "virtual-wan-link"
+                            },
+                            {
+                                "name": "underlay"
+                            },
+                            {
+                                "name": "overlay"
+                            }
+                        ],
+                        "members": [
+                            {
+                                "seq-num": 1,
+                                "interface": "port1",
+                                "zone": "underlay",
+                                "gateway": "$(wan1_gw)"
+                            },
+                            {
+                                "seq-num": 2,
+                                "interface": "VPN1",
+                                "priority": 10,
+                                "zone": "overlay"
+                            },
+                            {
+                                "seq-num": 3,
+                                "interface": "VPN2",
+                                "priority": 10,
+                                "zone": "overlay"
+                            }
+                        ],
+                        "health-check": [
+                            {
+                                "name": "SPOKE",
+                                "detect-mode": 4,
+                                "members": [
+                                    "2",
+                                    "3"
+                                ],
+                                "sla-id-redistribute": 1,
+                                "sla": [
+                                    {
+                                        "id": 1,
+                                        "link-cost-factor": "remote",
+                                        "priority-in-sla": 5,
+                                        "priority-out-sla": 995
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Internet",
+                                "server": "8.8.8.8",
+                                "protocol": 64,
+                                "members": [
+                                    "1"
+                                ],
+                                "sla-fail-log-period": 10,
+                                "sla-pass-log-period": 10,
+                                "update-cascade-interface": 0,
+                                "update-static-route": 0
+                            }
+                        ]
                     }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"replace\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/wanprof/HUB/system/sdwan\",\n            \"data\": {\n                \"status\": 1,\n                \"load-balance-mode\": 2,\n                \"zone\": [\n                    {\n                        \"name\": \"virtual-wan-link\"\n                    },\n                    {\n                        \"name\": \"underlay\"\n                    },\n                    {\n                        \"name\": \"overlay\"\n                    }\n                ],\n                \"members\": [\n                    {\n                        \"seq-num\": 1,\n                        \"interface\": \"port1\",\n                        \"zone\": \"underlay\"\n                    },\n                    {\n                        \"seq-num\": 2,\n                        \"interface\": \"VPN1\",\n                        \"priority\": 10,\n                        \"zone\": \"overlay\"\n                    },\n                    {\n                        \"seq-num\": 3,\n                        \"interface\": \"VPN2\",\n                        \"priority\": 10,\n                        \"zone\": \"overlay\"\n                    }\n                ],\n                \"health-check\": [\n                    {\n                        \"name\": \"SPOKE\",\n                        \"detect-mode\": 4,\n                        \"members\": [\n                            \"2\",\n                            \"3\"\n                        ],\n                        \"sla-id-redistribute\": 1,\n                        \"update-cascade-interface\": 0,\n                        \"update-static-route\": 0,\n                        \"sla\": [\n                            {\n                                \"id\": 1,\n                                \"link-cost-factor\": \"remote\",\n                                \"priority-in-sla\": 5,\n                                \"priority-out-sla\": 995\n                            }\n                        ]\n                    },\n                    {\n                        \"name\": \"Internet\",\n                        \"server\": \"8.8.8.8\",\n                        \"protocol\": 64,\n                        \"members\": [\n                            \"1\"\n                        ],\n                        \"sla-fail-log-period\": 10,\n                        \"sla-pass-log-period\": 10,\n                        \"update-cascade-interface\": 0,\n                        \"update-static-route\": 0\n                    }\n                ]\n            }\n        }\n    ]\n}",
-                    "options": {
-                        "raw": {
-                            "language": "json"
-                        }
-                    }
-                },
-                "url": {
-                    "raw": "https://{{ip}}/jsonrpc",
-                    "protocol": "https",
-                    "host": [
-                        "{{ip}}"
-                    ],
-                    "path": [
-                        "jsonrpc"
-                    ]
                 }
-            },
-            "response": []
+            ]
         },
         {
             "name": "15_Static_Route_Template",
