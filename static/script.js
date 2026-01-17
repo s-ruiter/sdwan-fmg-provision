@@ -7,6 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const sessionIdDisplay = document.getElementById('session-id-display');
     const logoutBtn = document.getElementById('logout-btn');
 
+    // Check for existing session on load
+    const savedSession = sessionStorage.getItem('fmg_session');
+    const savedIp = sessionStorage.getItem('fmg_ip');
+    const savedUser = sessionStorage.getItem('fmg_user');
+
+    if (savedSession) {
+        // Restore values so provisioning works
+        if (savedIp) document.getElementById('ip').value = savedIp;
+        if (savedUser) document.getElementById('username').value = savedUser;
+
+        handleLoginSuccess(savedSession, true);
+    }
+
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -36,7 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Success
-            handleLoginSuccess(data.session);
+            sessionStorage.setItem('fmg_session', data.session); // Save session
+            sessionStorage.setItem('fmg_ip', ip); // Save IP for provisioning
+            sessionStorage.setItem('fmg_user', username); // Save username
+
+            handleLoginSuccess(data.session, false);
 
         } catch (error) {
             statusMessage.textContent = error.message;
@@ -61,9 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     logoutBtn.addEventListener('click', () => {
         // Simple logout for now - just reset view
+        sessionStorage.removeItem('fmg_session');
+        sessionStorage.removeItem('fmg_ip');
+        sessionStorage.removeItem('fmg_user');
+
         dashboard.classList.add('hidden');
         loginCard.classList.remove('hidden');
         document.getElementById('password').value = '';
+        sessionIdDisplay.textContent = '';
     });
 
     const provisionScope = document.getElementById('provision-scope');
@@ -79,76 +101,106 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const provisionBtn = document.getElementById('provision-btn');
-    provisionBtn.addEventListener('click', async () => {
-        const config = {
-            ip: document.getElementById('ip').value,
-            adom: document.getElementById('adom').value,
-            dns_primary: document.getElementById('dns_primary').value,
-            dns_secondary: document.getElementById('dns_secondary').value,
-            faz_target_ip: document.getElementById('faz_target_ip').value,
-            faz_target_sn: document.getElementById('faz_target_sn').value,
-            corp_lan_subnet: document.getElementById('corp_lan_subnet').value,
-            corp_lan_netmask: document.getElementById('corp_lan_netmask').value,
-            session: sessionIdDisplay.textContent,
-            scope: provisionScope.value,
-            step_name: provisionScope.value === 'single' ? stepSelect.value : null
-        };
+    if (provisionBtn) {
+        provisionBtn.addEventListener('click', async () => {
+            const config = {
+                ip: document.getElementById('ip').value,
+                adom: document.getElementById('adom').value,
+                dns_primary: document.getElementById('dns_primary').value,
+                dns_secondary: document.getElementById('dns_secondary').value,
+                faz_target_ip: document.getElementById('faz_target_ip').value,
+                faz_target_sn: document.getElementById('faz_target_sn').value,
+                corp_lan_subnet: document.getElementById('corp_lan_subnet').value,
+                corp_lan_netmask: document.getElementById('corp_lan_netmask').value,
+                session: sessionIdDisplay.textContent,
+                scope: provisionScope.value,
+                step_name: provisionScope.value === 'single' ? stepSelect.value : null
+            };
 
-        // UI Feedback
-        provisionBtn.disabled = true;
-        provisionBtn.textContent = 'Provisioning...';
-
-        try {
-            console.log('Sending provisioning request:', config);
-
-            const response = await fetch('/api/provision', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(config)
-            });
-
-            const result = await response.json();
-            console.log('Provisioning result:', result);
-
-            if (!response.ok) {
-                throw new Error(result.detail || 'Provisioning failed');
+            // Basic validation
+            if (!config.ip) {
+                alert('Error: IP address is missing. Please disconnect and login again.');
+                return;
             }
 
-            const resultsContainer = document.getElementById('provision-results');
-            const resultsList = document.getElementById('results-list');
-            resultsList.innerHTML = '';
+            // UI Feedback
+            provisionBtn.disabled = true;
+            provisionBtn.textContent = 'Provisioning...';
 
-            result.results.forEach(item => {
-                const div = document.createElement('div');
-                div.className = `result-item ${item.status === 'success' ? 'success' : 'error'}`;
+            try {
+                console.log('Sending provisioning request:', config);
 
-                const icon = item.status === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>';
+                const response = await fetch('/api/provision', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
 
-                div.innerHTML = `
-                    <div class="result-icon">${icon}</div>
-                    <div class="result-name">${item.name}</div>
-                    <div class="result-details" style="flex: 1; text-align: right; margin-left:10px;">${item.message}</div>
-                `;
-                resultsList.appendChild(div);
-            });
+                const result = await response.json();
+                console.log('Provisioning result:', result);
 
-            resultsContainer.classList.remove('hidden');
+                if (!response.ok) {
+                    throw new Error(result.detail || 'Provisioning failed');
+                }
 
-        } catch (error) {
-            console.error('Provisioning error:', error);
-            const msg = typeof error.message === 'object' ? JSON.stringify(error.message) : error.message;
-            alert('Error: ' + msg);
-        } finally {
-            provisionBtn.disabled = false;
-            provisionBtn.textContent = 'Run Provisioning';
+                const resultsContainer = document.getElementById('provision-results');
+                const resultsList = document.getElementById('results-list');
+                resultsList.innerHTML = '';
+
+                if (result.results && Array.isArray(result.results)) {
+                    result.results.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = `result-item ${item.status === 'success' ? 'success' : 'error'}`;
+
+                        const icon = item.status === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>';
+
+                        div.innerHTML = `
+                            <div class="result-icon">${icon}</div>
+                            <div class="result-name">${item.name}</div>
+                            <div class="result-details" style="flex: 1; text-align: right; margin-left:10px;">${item.message}</div>
+                        `;
+                        resultsList.appendChild(div);
+                    });
+                } else {
+                    resultsList.innerHTML = '<div style="text-align:center; padding:10px;">No steps executed.</div>';
+                }
+
+                resultsContainer.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Provisioning error:', error);
+                const msg = typeof error.message === 'object' ? JSON.stringify(error.message) : error.message;
+                alert('Error: ' + msg);
+            } finally {
+                provisionBtn.disabled = false;
+                provisionBtn.textContent = 'Run Provisioning';
+            }
+        });
+    } else {
+        console.error('Provisioning button not found!');
+    }
+
+    async function handleLoginSuccess(sessionId, isRestore = false) {
+        // Define UI update logic
+        const showDashboard = () => {
+            loginCard.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            sessionIdDisplay.textContent = sessionId;
+        };
+
+        if (isRestore) {
+            // Restore: Show dashboard IMMEDIATELY
+            showDashboard();
+        } else {
+            // fresh login: show success message first
+            statusMessage.textContent = 'Connected successfully!';
+            statusMessage.classList.add('success');
+            // Schedule dashboard show to happen after animation/delay
+            setTimeout(showDashboard, 800);
         }
-    });
 
-    async function handleLoginSuccess(sessionId) {
-        statusMessage.textContent = 'Connected successfully!';
-        statusMessage.classList.add('success');
-
-        // Load steps for selection
+        // Load steps for selection (Background/Async)
+        // This no longer blocks the dashboard display for 'isRestore'
         try {
             const response = await fetch('/api/collection');
             if (response.ok) {
@@ -169,11 +221,5 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             console.error('Failed to load steps', e);
         }
-
-        setTimeout(() => {
-            loginCard.classList.add('hidden');
-            dashboard.classList.remove('hidden');
-            sessionIdDisplay.textContent = sessionId;
-        }, 800);
     }
 });

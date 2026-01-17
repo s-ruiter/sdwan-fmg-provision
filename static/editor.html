@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Collection - FMG Provisioner</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,13 +14,109 @@
     <style>
         .editor-container {
             width: 95%;
-            /* Wider than the login card */
-            max-width: 1200px;
+            max-width: 1600px;
+        }
+
+        .editor-layout {
+            display: flex;
+            gap: 20px;
+            height: 75vh;
+            margin-top: 1rem;
+        }
+
+        /* Sidebar Side */
+        .sidebar {
+            flex: 0 0 300px;
+            border-right: 1px solid var(--glass-border);
+            overflow-y: auto;
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .step-item {
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+        }
+
+        .step-item.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-color);
+            border-color: rgba(99, 102, 241, 0.3);
+            font-weight: 500;
+        }
+
+        .step-method {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        /* Main Editor Side */
+        .main-editor {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .editor-header h2 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            width: auto;
+            font-size: 0.85rem;
         }
 
         #json-editor {
+            flex: 1;
             width: 100%;
-            height: 60vh;
             background: var(--input-bg);
             border: 1px solid var(--glass-border);
             color: #e2e8f0;
@@ -27,11 +124,11 @@
             border-radius: 12px;
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
-            resize: vertical;
-            margin-bottom: 1.5rem;
+            resize: none;
             outline: none;
             overflow: auto;
             white-space: pre;
+            line-height: 1.5;
         }
 
         #json-editor:focus {
@@ -39,21 +136,152 @@
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
         }
 
-        .editor-header {
+        .meta-fields {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .meta-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .meta-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .meta-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+        }
+
+        /* Script Detection Panel */
+        .script-panel {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            /* hidden by default */
+        }
+
+        .script-panel h4 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .script-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .script-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-color);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .script-badge:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            width: 80%;
+            max-width: 900px;
+            height: 80%;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 15px;
         }
 
-        .editor-actions {
-            display: flex;
-            gap: 1rem;
+        .modal-body {
+            flex: 1;
+            position: relative;
         }
 
-        .btn-small {
-            padding: 10px 20px;
-            width: auto;
+        #script-editor-textarea {
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 15px;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            resize: none;
+            outline: none;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -65,6 +293,25 @@
         <div class="globe globe-3"></div>
     </div>
 
+    <!-- Script Editor Modal -->
+    <div class="modal-overlay" id="script-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: var(--primary-color);"><i class="fa-solid fa-file-code"></i> Edit Script</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-secondary btn-small" id="close-script-btn">Cancel</button>
+                    <button class="btn-primary btn-small" id="save-script-btn">Apply Changes</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <textarea id="script-editor-textarea"></textarea>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                Editing value at: <span id="script-path-display" style="color: white; font-family: monospace;"></span>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container editor-container">
         <header>
             <div class="logo">
@@ -74,95 +321,394 @@
         </header>
 
         <main>
-            <div class="glass-panel">
+            <div class="glass-panel" style="padding: 1.5rem;">
                 <div class="editor-header">
-                    <h2>postman_collection.json</h2>
-                    <div class="editor-actions">
+                    <div style="display: flex; align-items: center; gap: 15px;">
                         <a href="index.html" class="btn-secondary btn-small"
-                            style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center;">
-                            Back
+                            style="text-decoration: none; border-radius: 50%; width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-arrow-left"></i>
                         </a>
-                        <button class="btn-primary btn-small" id="save-btn">
-                            <i class="fa-solid fa-save" style="margin-right: 8px;"></i> Save Changes
+                        <h2 id="current-step-title">Select a Request to Edit</h2>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="btn-secondary btn-small" id="validate-btn" disabled>
+                            <i class="fa-solid fa-check" style="margin-right: 6px;"></i> Validate JSON
+                        </button>
+                        <button class="btn-primary btn-small" id="save-btn" disabled>
+                            <i class="fa-solid fa-save" style="margin-right: 6px;"></i> Save Changes
                         </button>
                     </div>
                 </div>
 
-                <textarea id="json-editor" spellcheck="false">Loading...</textarea>
+                <div class="editor-layout">
+                    <!-- Sidebar List -->
+                    <div class="sidebar" id="step-list">
+                        <!-- Items injected here -->
+                        <div style="text-align: center; padding: 20px;">Loading...</div>
+                    </div>
 
-                <div class="status-message" id="editor-status"></div>
+                    <!-- Main Editor Area -->
+                    <div class="main-editor" id="editor-area">
+                        <div class="empty-state" id="empty-state">
+                            <i class="fa-regular fa-file-code"
+                                style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <p>Select an API call from the sidebar to start editing.</p>
+                        </div>
+
+                        <div id="active-editor" class="hidden"
+                            style="display: flex; flex-direction: column; height: 100%;">
+                            <div class="meta-fields">
+                                <div class="meta-group">
+                                    <label>Method</label>
+                                    <input type="text" id="req-method" class="meta-input" placeholder="POST">
+                                </div>
+                                <div class="meta-group">
+                                    <label>URL</label>
+                                    <input type="text" id="req-url" class="meta-input"
+                                        placeholder="https://{{ip}}/jsonrpc">
+                                </div>
+                            </div>
+
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
+                                <label style="font-size: 0.8rem; color: var(--text-muted);">Request Body (JSON)</label>
+                                <span id="validation-status" style="font-size: 0.8rem;"></span>
+                            </div>
+                            <textarea id="json-editor" spellcheck="false" placeholder="JSON Body content..."></textarea>
+
+                            <!-- Script Detector -->
+                            <div class="script-panel" id="script-panel">
+                                <h4><i class="fa-solid fa-wand-magic-sparkles"></i> Embedded Scripts Detected</h4>
+                                <div class="script-list" id="script-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const editor = document.getElementById('json-editor');
-            const saveBtn = document.getElementById('save-btn');
-            const statusMsg = document.getElementById('editor-status');
+            const stepListEl = document.getElementById('step-list');
+            const editorAreaEl = document.getElementById('editor-area');
+            const emptyStateEl = document.getElementById('empty-state');
+            const activeEditorEl = document.getElementById('active-editor');
+            const currentStepTitle = document.getElementById('current-step-title');
 
-            // Load Content
+            const reqMethodInput = document.getElementById('req-method');
+            const reqUrlInput = document.getElementById('req-url');
+            const jsonEditor = document.getElementById('json-editor');
+            const scriptPanel = document.getElementById('script-panel');
+            const scriptList = document.getElementById('script-list');
+
+            const saveBtn = document.getElementById('save-btn');
+            const validateBtn = document.getElementById('validate-btn');
+            const validationStatus = document.getElementById('validation-status');
+
+            // Modal elements
+            const scriptModal = document.getElementById('script-modal');
+            const scriptEditorTextarea = document.getElementById('script-editor-textarea');
+            const closeScriptBtn = document.getElementById('close-script-btn');
+            const saveScriptBtn = document.getElementById('save-script-btn');
+            const scriptPathDisplay = document.getElementById('script-path-display');
+
+            let fullCollection = null;
+            let currentItemIndex = -1;
+            let currentScriptPath = null;
+
+            // Load Collection
             try {
                 const response = await fetch('/api/collection');
                 if (!response.ok) throw new Error('Failed to load collection');
-                const data = await response.json();
-                editor.value = JSON.stringify(data, null, 4);
+                fullCollection = await response.json();
+                renderSidebar();
             } catch (err) {
-                editor.value = "// Error loading file: " + err.message;
-                saveBtn.disabled = true;
+                stepListEl.innerHTML = `<div style="color: var(--error-color); padding: 10px;">Error: ${err.message}</div>`;
             }
 
-            // Save Content
+            function renderSidebar() {
+                stepListEl.innerHTML = '';
+                if (!fullCollection.item || fullCollection.item.length === 0) {
+                    stepListEl.innerHTML = '<div style="padding: 10px;">No items found.</div>';
+                    return;
+                }
+
+                fullCollection.item.forEach((item, index) => {
+                    const el = document.createElement('div');
+                    el.className = 'step-item';
+                    if (index === currentItemIndex) el.classList.add('active');
+
+                    const method = item.request?.method || 'GET';
+
+                    el.innerHTML = `
+                        <span class="step-method" style="background: ${getMethodColor(method)}">${method}</span>
+                        <span>${item.name}</span>
+                    `;
+                    el.onclick = () => selectItem(index);
+                    stepListEl.appendChild(el);
+                });
+            }
+
+            function getMethodColor(method) {
+                switch (method) {
+                    case 'POST': return '#eab308'; // yellow
+                    case 'GET': return '#3b82f6'; // blue
+                    case 'PUT': return '#f97316'; // orange
+                    case 'DELETE': return '#ef4444'; // red
+                    default: return 'rgba(255,255,255,0.2)';
+                }
+            }
+
+            function selectItem(index) {
+                currentItemIndex = index;
+                const item = fullCollection.item[index];
+
+                // Update UI selection
+                document.querySelectorAll('.step-item').forEach((el, idx) => {
+                    if (idx === index) el.classList.add('active');
+                    else el.classList.remove('active');
+                });
+
+                // Show editor
+                emptyStateEl.classList.add('hidden');
+                activeEditorEl.classList.remove('hidden');
+                activeEditorEl.style.display = 'flex';
+
+                // Enable buttons
+                saveBtn.disabled = false;
+                validateBtn.disabled = false;
+
+                // Populate fields
+                currentStepTitle.textContent = item.name;
+                reqMethodInput.value = item.request?.method || 'POST';
+
+                if (item.request?.url?.raw) {
+                    reqUrlInput.value = item.request.url.raw;
+                } else if (typeof item.request?.url === 'string') {
+                    reqUrlInput.value = item.request.url;
+                } else {
+                    reqUrlInput.value = '';
+                }
+
+                // Populate Body
+                let rawBody = item.request?.body?.raw || '';
+                try {
+                    const parsed = JSON.parse(rawBody);
+                    jsonEditor.value = JSON.stringify(parsed, null, 4);
+                    validationStatus.textContent = "Valid JSON loaded.";
+                    validationStatus.style.color = "var(--success-color)";
+
+                    // Detect scripts after successful parse
+                    detectAndRenderScripts(parsed);
+                } catch (e) {
+                    jsonEditor.value = rawBody;
+                    validationStatus.textContent = "Raw text loaded.";
+                    validationStatus.style.color = "var(--text-muted)";
+                    scriptPanel.style.display = 'none';
+                }
+            }
+
+            // --- Script Detection Logic ---
+
+            function detectAndRenderScripts(obj) {
+                const scripts = [];
+                traverse(obj, '', scripts);
+
+                if (scripts.length > 0) {
+                    scriptList.innerHTML = '';
+                    scripts.forEach(script => {
+                        const badge = document.createElement('div');
+                        badge.className = 'script-badge';
+                        // Clean up path for display
+                        const displayPath = script.path.replace(/^\./, '');
+                        badge.innerHTML = `<i class="fa-solid fa-file-pen"></i> Edit Script`;
+                        badge.onclick = () => openScriptModal(script.path, script.value);
+                        scriptList.appendChild(badge);
+                    });
+                    scriptPanel.style.display = 'block';
+                } else {
+                    scriptPanel.style.display = 'none';
+                }
+            }
+
+            function traverse(obj, path, results) {
+                if (typeof obj !== 'object' || obj === null) return;
+
+                // Check Object keys
+                Object.keys(obj).forEach(key => {
+                    const value = obj[key];
+                    const currentPath = path ? `${path}.${key}` : key;
+
+                    if (typeof value === 'string') {
+                        // Heuristic: Key is "script" OR contains multiple newlines
+                        const isScriptKey = key.toLowerCase() === 'script';
+                        const hasNewlines = (value.match(/\n/g) || []).length > 0;
+
+                        if (isScriptKey || hasNewlines) {
+                            results.push({ path: currentPath, value: value });
+                        }
+                    } else if (typeof value === 'object') {
+                        traverse(value, currentPath, results);
+                    }
+                });
+            }
+
+            // --- Modal Logic ---
+
+            function openScriptModal(path, value) {
+                currentScriptPath = path;
+                scriptPathDisplay.textContent = path;
+                // Value is the string from JSON (which has \n encoded if it was in the source, but JSON.parse converts \n to actual newlines)
+                // Wait, JSON.stringify(obj) escapes it back to \n.
+                // But passing `value` from the traversed object has actual newlines.
+                scriptEditorTextarea.value = value;
+                scriptModal.classList.add('active');
+            }
+
+            closeScriptBtn.onclick = () => {
+                scriptModal.classList.remove('active');
+                currentScriptPath = null;
+            };
+
+            saveScriptBtn.onclick = () => {
+                const newValue = scriptEditorTextarea.value;
+
+                // Update the current JSON object in the main editor
+                try {
+                    const currentJson = JSON.parse(jsonEditor.value);
+                    setValueByPath(currentJson, currentScriptPath, newValue);
+
+                    // Update main editor view
+                    jsonEditor.value = JSON.stringify(currentJson, null, 4);
+
+                    // Re-detect scripts (to update values/paths if needed)
+                    detectAndRenderScripts(currentJson);
+
+                    // Close modal
+                    scriptModal.classList.remove('active');
+
+                    // Trigger validation success
+                    validationStatus.textContent = "Script updated in JSON.";
+                    validationStatus.style.color = "var(--success-color)";
+                } catch (e) {
+                    alert("Error updating JSON: " + e.message);
+                }
+            };
+
+            // Helper to set object value by dot notation path
+            function setValueByPath(obj, path, value) {
+                const parts = path.split('.');
+                let current = obj;
+                for (let i = 0; i < parts.length - 1; i++) {
+                    current = current[parts[i]];
+                }
+                current[parts[parts.length - 1]] = value;
+            }
+
+            // --- General Editor Logic ---
+
+            function validateJSON() {
+                try {
+                    const content = jsonEditor.value;
+                    if (!content.trim()) return true;
+                    const parsed = JSON.parse(content);
+                    validationStatus.textContent = "JSON is Valid ✓";
+                    validationStatus.style.color = "var(--success-color)";
+
+                    // Also refresh script list in case user edited manually
+                    detectAndRenderScripts(parsed);
+
+                    return true;
+                } catch (e) {
+                    validationStatus.textContent = "Invalid JSON: " + e.message;
+                    validationStatus.style.color = "var(--error-color)";
+                    scriptPanel.style.display = 'none';
+                    return false;
+                }
+            }
+
+            validateBtn.addEventListener('click', () => {
+                validateJSON();
+            });
+
+            let debounceTimer;
+            jsonEditor.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(validateJSON, 800);
+            });
+
             saveBtn.addEventListener('click', async () => {
+                if (currentItemIndex === -1) return;
+
+                let rawBodyToSave = jsonEditor.value;
+                try {
+                    const parsed = JSON.parse(rawBodyToSave);
+                    rawBodyToSave = JSON.stringify(parsed, null, 4);
+                } catch (e) { }
+
+                // Update Local Model
+                const item = fullCollection.item[currentItemIndex];
+
+                if (!item.request) item.request = {};
+                item.request.method = reqMethodInput.value;
+
+                const urlVal = reqUrlInput.value;
+                if (!item.request.url) item.request.url = {};
+
+                if (typeof item.request.url === 'object') {
+                    item.request.url.raw = urlVal;
+                } else {
+                    item.request.url = urlVal;
+                }
+
+                if (!item.request.body) item.request.body = { mode: "raw", raw: "" };
+                item.request.body.raw = rawBodyToSave;
+
+                // Send to Server
                 saveBtn.disabled = true;
+                const originalText = saveBtn.innerHTML;
                 saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
                 try {
-                    // Validate JSON
-                    let jsonContent;
-                    try {
-                        jsonContent = JSON.parse(editor.value);
-                    } catch (e) {
-                        throw new Error('Invalid JSON format');
-                    }
-
                     const response = await fetch('/api/collection', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(jsonContent)
+                        body: JSON.stringify(fullCollection)
                     });
 
-                    if (!response.ok) throw new Error('Failed to save');
+                    if (!response.ok) throw new Error('Failed to save to server');
 
-                    statusMsg.textContent = 'Saved successfully!';
-                    statusMsg.className = 'status-message success';
-                    setTimeout(() => {
-                        statusMsg.style.opacity = '1';
-                        setTimeout(() => statusMsg.style.opacity = '0', 2000);
-                    }, 10);
+                    validationStatus.textContent = "Saved successfully!";
+                    validationStatus.style.color = "var(--success-color)";
 
+                    renderSidebar();
                 } catch (err) {
-                    statusMsg.textContent = err.message;
-                    statusMsg.className = 'status-message error';
-                    statusMsg.style.opacity = '1';
+                    validationStatus.textContent = "Save Error: " + err.message;
+                    validationStatus.style.color = "var(--error-color)";
                 } finally {
                     saveBtn.disabled = false;
-                    saveBtn.innerHTML = '<i class="fa-solid fa-save" style="margin-right: 8px;"></i> Save Changes';
+                    saveBtn.innerHTML = originalText;
                 }
             });
 
-            // Allow tab in textarea
-            editor.addEventListener('keydown', function (e) {
+            jsonEditor.addEventListener('keydown', function (e) {
                 if (e.key == 'Tab') {
                     e.preventDefault();
                     var start = this.selectionStart;
                     var end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 4;
+                }
+            });
 
-                    // set textarea value to: text before caret + tab + text after caret
-                    this.value = this.value.substring(0, start) +
-                        "    " + this.value.substring(end);
-
-                    // put caret at right position again
+            // Tab support for script editor too
+            scriptEditorTextarea.addEventListener('keydown', function (e) {
+                if (e.key == 'Tab') {
+                    e.preventDefault();
+                    var start = this.selectionStart;
+                    var end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
                     this.selectionStart = this.selectionEnd = start + 4;
                 }
             });

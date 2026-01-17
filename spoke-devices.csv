@@ -1,0 +1,4 @@
+Serial Number,Device Blueprint,Name,bgp_as,bgp_as_subnet,bgp_loopback,branch_id,lan_subnet,loopback_bgp_h1,loopback_bgp_h2,wan1,wan1_hub1,wan1_hub2,wan2
+"FGVMMLTM26000101","SPOKES","SPOKE10","65500","10.200.1.0/24","10.200.1.10","10","192.168.10.0/24","10.200.1.251","10.200.1.252","port1","100.127.10.101","100.127.10.102","port2"
+"FGVMMLTM26000102","SPOKES","SPOKE11","65500","10.200.1.0/24","10.200.1.11","11","192.168.11.0/24","10.200.1.251","10.200.1.252","port1","100.127.10.101","100.127.10.102","port2"
+
