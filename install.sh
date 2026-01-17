@@ -37,6 +37,6 @@ docker --version
 docker compose version
 
 # 6. Run provisioning tool
-docker-compose up -d --build
+docker compose up -d --build
 
 echo "--- Installation Complete! ---"
