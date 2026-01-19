@@ -278,7 +278,8 @@
                             ""
                         ],
                         "type": "text/javascript",
-                        "packages": {}
+                        "packages": {},
+                        "requests": {}
                     }
                 }
             ],
@@ -292,7 +293,7 @@
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n    \"session\": \"{{session}}\",\n    \"id\": 1,\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"/pm/config/adom/{{adom}}/devprof/Basic-Settings/device/template/widget/dns/action-list\",\n            \"data\": {\n                \"action\": \"conf-sys-dns\",\n                \"model\": \"all\",\n                \"seq\": 1,\n                \"value\": {\n                    \"primary\": \"$(dns_primary)\",\n                    \"secondary\": \"$(dns_secondary)\",\n                    \"protocol\": null\n                }\n            }\n        }\n    ]\n}",
+                    "raw": "{\n    \"method\": \"set\",\n    \"params\": [\n        {\n            \"url\": \"pm/config/adom/{{adom}}/devprof/Basic-Settings/system/dns\",\n            \"data\": {\n                \"primary\": \"$(dns_primary)\",\n                \"secondary\": \"$(dns_secondary)\"\n            }\n        }\n    ],\n    \"session\": \"{{session_id}}\",\n    \"id\": 1\n}",
                     "options": {
                         "raw": {
                             "language": "json"
