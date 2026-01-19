@@ -200,6 +200,53 @@ async def run_provision(req: ProvisionRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+# ... existing code ...
+
+import csv
+from io import StringIO
+
+ALLOWED_FILES = ["hub1-devices.csv", "hub2-devices.csv", "spoke-devices.csv"]
+
+@app.get("/api/files")
+async def list_files():
+    return {"files": ALLOWED_FILES}
+
+@app.get("/api/files/{filename}")
+async def get_file_content(filename: str):
+    if filename not in ALLOWED_FILES:
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    try:
+        with open(filename, "r") as f:
+            content = f.read()
+            
+        # Parse CSV to return structured data
+        f = StringIO(content)
+        reader = csv.DictReader(f)
+        rows = list(reader)
+        return {"filename": filename, "content": content, "headers": reader.fieldnames, "rows": rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class FileUpdate(BaseModel):
+    content: str
+
+@app.post("/api/files/{filename}")
+async def update_file_content(filename: str, update: FileUpdate):
+    if filename not in ALLOWED_FILES:
+        raise HTTPException(status_code=404, detail="File not found")
+        
+    try:
+        # Validate CSV structure implicitly by writing it
+        # (The user saves the whole CSV content string constructed from the frontend)
+        with open(filename, "w") as f:
+            f.write(update.content)
+            
+        return {"message": "File updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 if __name__ == "__main__":

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Import files - FMG Provisioner</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .devices-container {
+            width: 95%;
+            max-width: 1600px;
+        }
+
+        .devices-layout {
+            display: flex;
+            gap: 20px;
+            height: 75vh;
+            margin-top: 1rem;
+        }
+
+        /* Sidebar Side */
+        .sidebar {
+            flex: 0 0 250px;
+            border-right: 1px solid var(--border-color);
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .file-item {
+            padding: 12px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .file-item.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary-color);
+            border-color: rgba(59, 130, 246, 0.3);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-header h2 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--input-bg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+        }
+
+        td {
+            padding: 8px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Editable Input */
+        .editable-input {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-primary);
+            padding: 6px 8px;
+            border-radius: 4px;
+            width: 100%;
+            min-width: 250px;
+            font-family: inherit;
+            font-size: inherit;
+            transition: all 0.2s;
+        }
+
+        .editable-input:hover {
+            border-color: var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .editable-input:focus {
+            border-color: var(--primary-color);
+            background: var(--card-bg);
+            outline: none;
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            width: auto;
+            font-size: 0.85rem;
+            border-radius: var(--radius-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container devices-container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-file-csv"></i>
+                <span>Edit Import files</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="glass-panel" style="padding: 1.5rem;">
+                <div class="content-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <a href="index.html" class="btn-secondary btn-small"
+                            style="text-decoration: none; border-radius: 50%; width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                        <h2 id="current-file-title">Select a File to Edit</h2>
+                    </div>
+                    <div class="editor-actions" style="display: flex; gap: 10px;">
+                        <button class="btn-secondary btn-small" id="download-btn" disabled>
+                            <i class="fa-solid fa-download" style="margin-right: 6px;"></i> Download
+                        </button>
+                        <button class="btn-primary btn-small" id="save-btn" disabled>
+                            <i class="fa-solid fa-save" style="margin-right: 6px;"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <div class="devices-layout">
+                    <!-- Sidebar List -->
+                    <div class="sidebar" id="file-list">
+                        <div style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading...</div>
+                    </div>
+
+                    <!-- Main Content Area -->
+                    <div class="main-content" id="content-area">
+                        <div class="empty-state" id="empty-state">
+                            <i class="fa-solid fa-file-csv"
+                                style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <p>Select a CSV file from the sidebar to view and edit.</p>
+                        </div>
+
+                        <div id="table-wrapper" class="table-container hidden">
+                            <table id="device-table">
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-message" id="status-message" style="margin-top: 15px;"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const fileListEl = document.getElementById('file-list');
+            const emptyStateEl = document.getElementById('empty-state');
+            const tableWrapperEl = document.getElementById('table-wrapper');
+            const deviceTable = document.getElementById('device-table');
+            const currentFileTitle = document.getElementById('current-file-title');
+
+            const saveBtn = document.getElementById('save-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const statusMessage = document.getElementById('status-message');
+
+            let currentFilename = null;
+            let currentData = null; // { headers: [], rows: [] }
+
+            // Load Files List
+            try {
+                const response = await fetch('/api/files');
+                const data = await response.json();
+                renderSidebar(data.files);
+            } catch (err) {
+                fileListEl.innerHTML = `<div style="color: var(--error-color); padding: 10px;">Error: ${err.message}</div>`;
+            }
+
+            function renderSidebar(files) {
+                fileListEl.innerHTML = '';
+                if (!files || files.length === 0) {
+                    fileListEl.innerHTML = '<div style="padding: 10px;">No files found.</div>';
+                    return;
+                }
+
+                files.forEach(file => {
+                    const el = document.createElement('div');
+                    el.className = 'file-item';
+
+                    el.innerHTML = `
+                        <i class="fa-solid fa-file-csv"></i>
+                        <span>${file}</span>
+                    `;
+                    el.onclick = () => loadFile(file, el);
+                    fileListEl.appendChild(el);
+                });
+            }
+
+            async function loadFile(filename, element) {
+                // UI Selection
+                document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+
+                currentFilename = filename;
+                currentFileTitle.textContent = filename;
+
+                // Show Loading
+                emptyStateEl.classList.add('hidden');
+                tableWrapperEl.classList.add('hidden');
+                saveBtn.disabled = true;
+                downloadBtn.disabled = true;
+
+                try {
+                    const response = await fetch(`/api/files/${filename}`);
+                    if (!response.ok) throw new Error('Failed to load file');
+
+                    const data = await response.json();
+                    currentData = { headers: data.headers, rows: data.rows };
+
+                    renderTable(currentData);
+
+                    tableWrapperEl.classList.remove('hidden');
+                    saveBtn.disabled = false;
+                    downloadBtn.disabled = false;
+                    statusMessage.innerHTML = '';
+                    statusMessage.className = 'status-message';
+
+                } catch (err) {
+                    statusMessage.textContent = "Error loading file: " + err.message;
+                    statusMessage.className = 'status-message error';
+                }
+            }
+
+            function renderTable(data) {
+                const thead = deviceTable.querySelector('thead');
+                const tbody = deviceTable.querySelector('tbody');
+
+                thead.innerHTML = '';
+                tbody.innerHTML = '';
+
+                // Headers
+                const headerRow = document.createElement('tr');
+                data.headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+
+                // Rows
+                data.rows.forEach((row, rowIndex) => {
+                    const tr = document.createElement('tr');
+
+                    data.headers.forEach(header => {
+                        const td = document.createElement('td');
+
+                        // Check if it's the Serial Number column
+                        if (header.trim().toLowerCase() === 'serial number') {
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.className = 'editable-input';
+                            input.value = row[header];
+                            input.onchange = (e) => {
+                                // Update local model
+                                currentData.rows[rowIndex][header] = e.target.value;
+                            };
+                            td.appendChild(input);
+                        } else {
+                            td.textContent = row[header];
+                        }
+
+                        tr.appendChild(td);
+                    });
+
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Save Button
+            saveBtn.addEventListener('click', async () => {
+                if (!currentFilename || !currentData) return;
+
+                saveBtn.disabled = true;
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+                try {
+                    // Reconstruct CSV content
+                    const csvContent = convertToCSV(currentData);
+
+                    const response = await fetch(`/api/files/${currentFilename}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: csvContent })
+                    });
+
+                    if (!response.ok) throw new Error('Failed to save file');
+
+                    statusMessage.textContent = "Saved successfully!";
+                    statusMessage.className = 'status-message success';
+
+                    // Clear success message after 3 seconds
+                    setTimeout(() => {
+                        statusMessage.className = 'status-message';
+                        statusMessage.textContent = '';
+                    }, 3000);
+
+                } catch (err) {
+                    statusMessage.textContent = "Save Error: " + err.message;
+                    statusMessage.className = 'status-message error';
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalText;
+                }
+            });
+
+            // Download Button
+            downloadBtn.addEventListener('click', () => {
+                if (!currentData) return;
+
+                try {
+                    const csvContent = convertToCSV(currentData);
+                    const blob = new Blob([csvContent], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = currentFilename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch (e) {
+                    statusMessage.textContent = "Download Error: " + e.message;
+                    statusMessage.className = 'status-message error';
+                }
+            });
+
+            // Helper: Convert Data to CSV String
+            function convertToCSV(data) {
+                const headerRow = data.headers.join(',') + '\n';
+                const rows = data.rows.map(row => {
+                    return data.headers.map(header => {
+                        let val = row[header] || '';
+                        // Quote if contains comma or quote
+                        if (val.includes(',') || val.includes('"')) {
+                            val = `"${val.replace(/"/g, '""')}"`;
+                        }
+                        return val;
+                    }).join(',');
+                }).join('\n');
+
+                return headerRow + rows;
+            }
+        });
+    </script>
+</body>
+
+</html>
