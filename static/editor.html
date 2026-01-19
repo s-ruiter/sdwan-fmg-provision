@@ -8,7 +8,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -27,7 +27,7 @@
         /* Sidebar Side */
         .sidebar {
             flex: 0 0 300px;
-            border-right: 1px solid var(--glass-border);
+            border-right: 1px solid var(--border-color);
             overflow-y: auto;
             padding-right: 10px;
             display: flex;
@@ -47,9 +47,9 @@
         .step-item {
             padding: 12px;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             font-size: 0.9rem;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             transition: all 0.2s;
             border: 1px solid transparent;
             display: flex;
@@ -59,13 +59,14 @@
 
         .step-item:hover {
             background: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
+            color: var(--text-primary);
         }
 
         .step-item.active {
-            background: rgba(99, 102, 241, 0.15);
+            background: rgba(59, 130, 246, 0.15);
+            /* Primary color with opacity */
             color: var(--primary-color);
-            border-color: rgba(99, 102, 241, 0.3);
+            border-color: rgba(59, 130, 246, 0.3);
             font-weight: 500;
         }
 
@@ -94,13 +95,14 @@
             align-items: center;
             margin-bottom: 1rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .editor-header h2 {
             font-size: 1.2rem;
             margin: 0;
-            color: var(--text-color);
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
         .editor-actions {
@@ -118,11 +120,11 @@
             flex: 1;
             width: 100%;
             background: var(--input-bg);
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--border-color);
             color: #e2e8f0;
             padding: 1rem;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
+            border-radius: var(--radius-md);
+            font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
             font-size: 0.9rem;
             resize: none;
             outline: none;
@@ -133,7 +135,7 @@
 
         #json-editor:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 1px var(--primary-color);
         }
 
         .meta-fields {
@@ -146,23 +148,24 @@
         .meta-group label {
             display: block;
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             margin-bottom: 4px;
         }
 
         .meta-input {
             width: 100%;
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid var(--glass-border);
-            color: white;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             padding: 8px 12px;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             font-size: 0.9rem;
             outline: none;
         }
 
         .meta-input:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 1px var(--primary-color);
         }
 
         .empty-state {
@@ -171,7 +174,7 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: var(--text-muted);
+            color: var(--text-secondary);
         }
 
         /* Script Detection Panel */
@@ -179,8 +182,8 @@
             margin-top: 15px;
             padding: 15px;
             background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             max-height: 150px;
             overflow-y: auto;
             display: none;
@@ -190,7 +193,7 @@
         .script-panel h4 {
             font-size: 0.9rem;
             margin-bottom: 10px;
-            color: var(--accent-color);
+            color: var(--primary-color);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -210,14 +213,14 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             font-size: 0.8rem;
-            color: var(--text-color);
+            color: var(--text-primary);
             cursor: pointer;
             border: 1px solid transparent;
             transition: all 0.2s;
         }
 
         .script-badge:hover {
-            background: rgba(99, 102, 241, 0.2);
+            background: rgba(59, 130, 246, 0.2);
             border-color: var(--primary-color);
         }
 
@@ -245,13 +248,13 @@
         }
 
         .modal-content {
-            background: #1e293b;
+            background: var(--card-bg);
             width: 80%;
             max-width: 900px;
             height: 80%;
             border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
             display: flex;
             flex-direction: column;
             padding: 20px;
@@ -272,27 +275,26 @@
         #script-editor-textarea {
             width: 100%;
             height: 100%;
-            background: #0f172a;
+            background: var(--input-bg);
             color: #e2e8f0;
             padding: 15px;
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
+            font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
             resize: none;
             outline: none;
             font-size: 0.95rem;
             line-height: 1.6;
         }
+
+        #script-editor-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
     </style>
 </head>
 
 <body>
-    <div class="background-globes">
-        <div class="globe globe-1"></div>
-        <div class="globe globe-2"></div>
-        <div class="globe globe-3"></div>
-    </div>
-
     <!-- Script Editor Modal -->
     <div class="modal-overlay" id="script-modal">
         <div class="modal-content">
@@ -306,8 +308,9 @@
             <div class="modal-body">
                 <textarea id="script-editor-textarea"></textarea>
             </div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
-                Editing value at: <span id="script-path-display" style="color: white; font-family: monospace;"></span>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px;">
+                Editing value at: <span id="script-path-display"
+                    style="color: var(--text-primary); font-family: monospace;"></span>
             </div>
         </div>
     </div>
@@ -331,6 +334,9 @@
                         <h2 id="current-step-title">Select a Request to Edit</h2>
                     </div>
                     <div class="editor-actions">
+                        <button class="btn-secondary btn-small" id="export-btn">
+                            <i class="fa-solid fa-download" style="margin-right: 6px;"></i> Export
+                        </button>
                         <button class="btn-secondary btn-small" id="validate-btn" disabled>
                             <i class="fa-solid fa-check" style="margin-right: 6px;"></i> Validate JSON
                         </button>
@@ -344,7 +350,7 @@
                     <!-- Sidebar List -->
                     <div class="sidebar" id="step-list">
                         <!-- Items injected here -->
-                        <div style="text-align: center; padding: 20px;">Loading...</div>
+                        <div style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading...</div>
                     </div>
 
                     <!-- Main Editor Area -->
@@ -371,7 +377,8 @@
 
                             <div
                                 style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
-                                <label style="font-size: 0.8rem; color: var(--text-muted);">Request Body (JSON)</label>
+                                <label style="font-size: 0.8rem; color: var(--text-secondary);">Request Body
+                                    (JSON)</label>
                                 <span id="validation-status" style="font-size: 0.8rem;"></span>
                             </div>
                             <textarea id="json-editor" spellcheck="false" placeholder="JSON Body content..."></textarea>
@@ -504,7 +511,7 @@
                 } catch (e) {
                     jsonEditor.value = rawBody;
                     validationStatus.textContent = "Raw text loaded.";
-                    validationStatus.style.color = "var(--text-muted)";
+                    validationStatus.style.color = "var(--text-secondary)";
                     scriptPanel.style.display = 'none';
                 }
             }
@@ -595,6 +602,35 @@
                     alert("Error updating JSON: " + e.message);
                 }
             };
+
+            // Export Button Logic
+            const exportBtn = document.getElementById('export-btn');
+            exportBtn.addEventListener('click', () => {
+                if (!fullCollection) {
+                    alert("No collection loaded to export.");
+                    return;
+                }
+
+                try {
+                    // Create a blob from the current fullCollection
+                    const dataStr = JSON.stringify(fullCollection, null, 4);
+                    const blob = new Blob([dataStr], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+
+                    // Create temporary link and click it
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "postman_collection.json";
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Cleanup
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch (e) {
+                    alert("Export failed: " + e.message);
+                }
+            });
 
             // Helper to set object value by dot notation path
             function setValueByPath(obj, path, value) {

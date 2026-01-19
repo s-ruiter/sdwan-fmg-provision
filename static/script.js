@@ -154,11 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         const icon = item.status === 'success' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>';
 
-                        div.innerHTML = `
-                            <div class="result-icon">${icon}</div>
-                            <div class="result-name">${item.name}</div>
-                            <div class="result-details" style="flex: 1; text-align: right; margin-left:10px;">${item.message}</div>
-                        `;
+                            div.innerHTML = `
+                                <div class="result-icon">${icon}</div>
+                                <div class="result-content">
+                                    <div class="result-name">${item.name}</div>
+                                    <div class="result-details">${item.message}</div>
+                                </div>
+                            `;
                         resultsList.appendChild(div);
                     });
                 } else {
